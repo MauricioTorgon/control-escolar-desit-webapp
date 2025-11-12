@@ -115,6 +115,27 @@ export class RegistroAdminComponent implements OnInit {
   }
 
   public actualizar(){
+    // Validación de los datos
+    this.errors = {};
+    this.errors = this.administradoresService.validarAdmin(this.admin, this.editar);
+    if(Object.keys(this.errors).length > 0){
+      return false;
+    }
+
+    // Ejecutamos el servicio de actualización
+    this.administradoresService.actualizarAdmin(this.admin).subscribe(
+      (response) => {
+        // Redirigir o mostrar mensaje de éxito
+        alert("Administrador actualizado exitosamente");
+        console.log("Administrador actualizado: ", response);
+        this.router.navigate(["administrador"]);
+      },
+      (error) => {
+        // Manejar errores de la API
+        alert("Error al actualizar administrador");
+        console.error("Error al actualizar administrador: ", error);
+      }
+    );
 
   }
 
