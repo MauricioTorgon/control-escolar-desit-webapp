@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core'; 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MaestrosService } from 'src/app/services/maestros.service';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-maestros-screen',
@@ -11,22 +12,18 @@ import { MaestrosService } from 'src/app/services/maestros.service';
   styleUrls: ['./maestros-screen.component.scss']
 })
 
-export class MaestrosScreenComponent implements OnInit {
+export class MaestrosScreenComponent implements OnInit, AfterViewInit {
 
   public name_user: string = "";
   public rol: string = "";
   public token: string = "";
   public lista_maestros: any[] = [];
 
-  //Para la tabla
   displayedColumns: string[] = ['id_trabajador', 'nombre', 'email', 'fecha_nacimiento', 'telefono', 'rfc', 'cubiculo', 'area_investigacion', 'editar', 'eliminar'];
-  dataSource = new MatTableDataSource<DatosUsuario>(this.lista_maestros as DatosUsuario[]);
+  dataSource = new MatTableDataSource<DatosUsuario>([]);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     public facadeService: FacadeService,
@@ -37,41 +34,54 @@ export class MaestrosScreenComponent implements OnInit {
   ngOnInit(): void {
     this.name_user = this.facadeService.getUserCompleteName();
     this.rol = this.facadeService.getUserGroup();
+    this.token = this.facadeService.getSessionToken();
     //Validar que haya inicio de sesión
     //Obtengo el token del login
-    this.token = this.facadeService.getSessionToken();
-    console.log("Token: ", this.token);
     if(this.token == ""){
       this.router.navigate(["/"]);
     }
-    //Obtener maestros
+    
+    //filtro para busqueda
+    this.dataSource.filterPredicate = (data: DatosUsuario, filter: string) => {
+      const nombreCompleto = data.nombre ||'';
+      return nombreCompleto.includes(filter);
+    };
+
     this.obtenerMaestros();
   }
 
-  // Consumimos el servicio para obtener los maestros
-  //Obtener maestros
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
   public obtenerMaestros() {
     this.maestrosService.obtenerListaMaestros().subscribe(
       (response) => {
         this.lista_maestros = response;
-        console.log("Lista users: ", this.lista_maestros);
-        if (this.lista_maestros.length > 0) {
-          //Agregar datos del nombre e email
-          this.lista_maestros.forEach(usuario => {
+        let maestrosData: DatosUsuario[] = response as DatosUsuario[];
+        
+        if (maestrosData.length > 0) {
+          maestrosData.forEach(usuario => {
             usuario.first_name = usuario.user.first_name;
             usuario.last_name = usuario.user.last_name;
             usuario.email = usuario.user.email;
+            usuario.nombre = usuario.user.first_name.toLowerCase() + ' ' + usuario.user.last_name.toLowerCase();
           });
-          console.log("Maestros: ", this.lista_maestros);
-
-          this.dataSource = new MatTableDataSource<DatosUsuario>(this.lista_maestros as DatosUsuario[]);
         }
+        console.log("Maestros: ", this.lista_maestros);
+        
+        this.dataSource.data = maestrosData;
+        
       }, (error) => {
         console.error("Error al obtener la lista de maestros: ", error);
         alert("No se pudo obtener la lista de maestros");
+        this.lista_maestros = [];
+        this.dataSource.data = [];
       }
     );
   }
+
 
   public goEditar(idUser: number) {
     this.router.navigate(["registro-usuarios/maestros/" + idUser]);
@@ -81,9 +91,17 @@ export class MaestrosScreenComponent implements OnInit {
 
   }
 
+  public Filtrar(target: any) {
+    const filterValue = target.value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
 }
 
-//Esto va fuera de la llave que cierra la clase
 export interface DatosUsuario {
   id: number,
   id_trabajador: number;
@@ -95,4 +113,7 @@ export interface DatosUsuario {
   rfc: string,
   cubiculo: string,
   area_investigacion: number,
+  
+  nombre?: string;
+  user?: any;
 }
