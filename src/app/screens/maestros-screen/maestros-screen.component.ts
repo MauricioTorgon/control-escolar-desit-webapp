@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { EliminarUserModalComponent } from 'src/app/modals/eliminar-user-modal/eliminar-user-modal.component';
@@ -25,9 +26,11 @@ export class MaestrosScreenComponent implements OnInit {
   dataSource = new MatTableDataSource<DatosUsuario>(this.lista_maestros as DatosUsuario[]);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   constructor(
@@ -64,10 +67,22 @@ export class MaestrosScreenComponent implements OnInit {
             usuario.first_name = usuario.user.first_name;
             usuario.last_name = usuario.user.last_name;
             usuario.email = usuario.user.email;
+            usuario.nombre = usuario.user.first_name.toLowerCase() + ' ' + usuario.user.last_name.toLowerCase();
           });
           console.log("Maestros: ", this.lista_maestros);
 
-          this.dataSource = new MatTableDataSource<DatosUsuario>(this.lista_maestros as DatosUsuario[]);
+          //this.dataSource = new MatTableDataSource<DatosUsuario>(this.lista_maestros as DatosUsuario[]);
+          this.dataSource.data = this.lista_maestros;
+
+          // Timeout para que cargue el paginator y sort después de obtener los datos
+          setTimeout(() => {
+            if (this.paginator) {
+              this.dataSource.paginator = this.paginator;
+            }
+            if (this.sort) {
+            this.dataSource.sort = this.sort;
+          }
+          });
         }
       }, (error) => {
         console.error("Error al obtener la lista de maestros: ", error);
@@ -76,6 +91,14 @@ export class MaestrosScreenComponent implements OnInit {
     );
   }
 
+  //Función que es el para el filtering
+    Filtrar(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase(); 
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    } 
+  }
   public goEditar(idUser: number) {
     this.router.navigate(["registro-usuarios/maestros/" + idUser]);
   }
