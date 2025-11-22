@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { MatRadioChange } from '@angular/material/radio';
 import { AdministradoresService } from '../../services/administradores.service';
 import { MaestrosService } from 'src/app/services/maestros.service';
+import { AlumnosService } from 'src/app/services/alumnos.service';
 
 @Component({
   selector: 'app-registro-usuarios-screen',
@@ -33,6 +34,7 @@ export class RegistroUsuariosScreenComponent implements OnInit {
     public facadeService: FacadeService,
     private administradoresService: AdministradoresService,
     private maestrosService: MaestrosService,
+    private alumnosService: AlumnosService,
   ) { }
 
   ngOnInit(): void {
@@ -40,6 +42,9 @@ export class RegistroUsuariosScreenComponent implements OnInit {
     //Obtener de la URL el rol para saber cual editar
     if(this.activatedRoute.snapshot.params['rol'] != undefined){
       this.rol = this.activatedRoute.snapshot.params['rol'];
+      // la URL dice "maestros" pero el código espera "maestro", con esto lo corrijo
+      if (this.rol === 'maestros') { this.rol = 'maestro'; }
+      if (this.rol === 'alumnos') { this.rol = 'alumno'; }
       console.log("Rol detectado: ", this.rol);
     }
 
@@ -70,6 +75,7 @@ export class RegistroUsuariosScreenComponent implements OnInit {
           this.user.email = response.user?.email || response.email;
           this.user.tipo_usuario = this.rol;
           this.isAdmin = true;
+          this.tipo_user = "administrador"; //para el template
         }, (error) => {
           console.log("Error: ", error);
           alert("No se pudo obtener el administrador seleccionado");
@@ -86,6 +92,8 @@ export class RegistroUsuariosScreenComponent implements OnInit {
           this.user.email = response.user?.email || response.email;
           this.user.tipo_usuario = this.rol;
           this.isMaestro = true;
+          //para el template
+          this.tipo_user = "maestro";
         }, (error) => {
           console.log("Error: ", error);
           alert("No se pudo obtener el administrador seleccionado");
@@ -93,6 +101,23 @@ export class RegistroUsuariosScreenComponent implements OnInit {
       );
     }else if(this.rol == "alumno"){
       // TODO: Implementar lógica para obtener alumno por ID
+      this.alumnosService.obtenerAlumnoPorID(this.idUser).subscribe(
+        (response) => {
+          this.user = response;
+          console.log("Usuario original obtenido: ", this.user);
+          // Asignar datos, soportando respuesta plana o anidada
+          this.user.first_name = response.user?.first_name || response.first_name;
+          this.user.last_name = response.user?.last_name || response.last_name;
+          this.user.email = response.user?.email || response.email;
+          this.user.tipo_usuario = this.rol;
+          this.isAlumno = true;
+          //para el template
+          this.tipo_user = "alumno";
+        }, (error) => {
+          console.log("Error: ", error);
+          alert("No se pudo obtener el alumno seleccionado");
+        }
+      );
     }
 
   }

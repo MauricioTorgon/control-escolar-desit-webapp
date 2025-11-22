@@ -160,7 +160,7 @@ export class AlumnosService {
   }
 
     //Servicio para obtener un maestro por su ID
-  public obtenerAlumnoPorID(idMaestro: number): Observable<any>{
+  public obtenerAlumnoPorID(idAlumno: number): Observable<any>{
     // Verificamos si existe el token de sesión
     const token = this.facadeService.getSessionToken();
     let headers: HttpHeaders;
@@ -169,8 +169,20 @@ export class AlumnosService {
     } else {
       headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     }
-    return this.http.get<any>(`${environment.url_api}/alumnos/?id=${idMaestro}`, { headers });
+    return this.http.get<any>(`${environment.url_api}/alumnos/?id=${idAlumno}`, { headers });
   }
 
+  // Petición para actualizar un administrador
+  public actualizarAlumno(data: any): Observable<any> {
+    const token = this.facadeService.getSessionToken();
+    let headers: HttpHeaders;
+    if (token) {
+      headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    } else {
+      headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+      console.log("No se encontró el token del usuario");
+    }
+    return this.http.put<any>(`${environment.url_api}/maestros/`, data, { headers });
+  }
 
 }

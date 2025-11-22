@@ -121,6 +121,19 @@ export class MaestrosService {
     }
     return this.http.post<any>(`${environment.url_api}/maestros/`, data, { headers });
   }
+  
+  // Petición para actualizar un maestro
+  public actualizarMaestro(data: any): Observable<any> {
+    const token = this.facadeService.getSessionToken();
+    let headers: HttpHeaders;
+    if (token) {
+      headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    } else {
+      headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+      console.log("No se encontró el token del usuario");
+    }
+    return this.http.put<any>(`${environment.url_api}/maestros/`, data, { headers });
+  }
 
   //Servicio para obtener la lista de maestros
   public obtenerListaMaestros(): Observable<any>{

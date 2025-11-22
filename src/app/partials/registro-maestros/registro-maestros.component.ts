@@ -57,9 +57,39 @@ export class RegistroMaestrosComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.maestro = this.maestrosService.esquemaMaestro();
-    // Rol del usuario
-    this.maestro.rol = this.rol;
+    //El primer if valida si existe un parámetro en la URL
+    if(this.activatedRoute.snapshot.params['id'] != undefined){
+      this.editar = true;
+      //Asignamos a nuestra variable global el valor del ID que viene por la URL
+      this.idUser = this.activatedRoute.snapshot.params['id'];
+      console.log("ID User: ", this.idUser);
+      //Al iniciar la vista asignamos los datos del user
+      this.maestro = this.datos_user;
+
+      /* EDIT CHAT*/
+      if(this.datos_user.user){
+        this.maestro.first_name = this.datos_user.user.first_name;
+        this.maestro.last_name = this.datos_user.user.last_name;
+        this.maestro.email = this.datos_user.user.email;
+      }
+      // Parsear materias_json si es string, o inicializar vacío si es null/undefined
+      if (typeof this.maestro.materias_json === 'string') {
+        try {
+          console.log("Parseando materias_json desde string");
+          this.maestro.materias_json = JSON.parse(this.maestro.materias_json);
+        } catch (e) {
+          console.error("Error al parsear materias_json: ", e);
+          this.maestro.materias_json = [];
+        }
+      }
+      /*EDIT CHAT */
+
+    }else{
+      // Si no va a this.editar, entonces inicializamos el JSON para registro nuevo
+      this.maestro = this.maestrosService.esquemaMaestro();
+      this.maestro.rol = this.rol;
+      this.token = this.facadeService.getSessionToken();
+    }
 
     console.log("Datos maestro: ", this.maestro);
   }
@@ -102,7 +132,26 @@ export class RegistroMaestrosComponent implements OnInit {
   }
 
   public actualizar(){
-
+// Validación de los datos
+    this.errors = {};
+    this.errors = this.maestrosService.validarMaestro(this.maestro, this.editar);
+    if(Object.keys(this.errors).length > 0){
+      return false;
+    }
+    // Ejecutamos el servicio de actualización
+    this.maestrosService.actualizarMaestro(this.maestro).subscribe(
+      (response) => {
+        // Redirigir o mostrar mensaje de éxito
+        alert("Maestro actualizado exitosamente");
+        console.log("Maestro actualizado: ", response);
+        this.router.navigate(["maestros"]);
+      },
+      (error) => {
+        // Manejar errores de la API
+        alert("Error al actualizar Maestro");
+        console.error("Error al actualizar Maestro: ", error);
+      }
+    );
   }
 
   //Funciones para password

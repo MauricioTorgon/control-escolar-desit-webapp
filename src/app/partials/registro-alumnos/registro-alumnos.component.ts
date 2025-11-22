@@ -80,6 +80,26 @@ export class RegistroAlumnosComponent implements OnInit {
 
   public actualizar(){
     // Lógica para actualizar los datos de un alumno existente
+// Validación de los datos
+    this.errors = {};
+    this.errors = this.alumnosService.validarAlumno(this.alumno, this.editar);
+    if(Object.keys(this.errors).length > 0){
+      return false;
+    }
+    // Ejecutamos el servicio de actualización
+    this.alumnosService.actualizarAlumno(this.alumno).subscribe(
+      (response) => {
+        // Redirigir o mostrar mensaje de éxito
+        alert("Administrador actualizado exitosamente");
+        console.log("Administrador actualizado: ", response);
+        this.router.navigate(["administrador"]);
+      },
+      (error) => {
+        // Manejar errores de la API
+        alert("Error al actualizar administrador");
+        console.error("Error al actualizar administrador: ", error);
+      }
+    );
   }
 
   //Funciones para password
