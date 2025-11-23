@@ -172,7 +172,7 @@ export class AlumnosService {
     return this.http.get<any>(`${environment.url_api}/alumnos/?id=${idAlumno}`, { headers });
   }
 
-  // Petición para actualizar un administrador
+  // Petición para actualizar un alumno
   public actualizarAlumno(data: any): Observable<any> {
     const token = this.facadeService.getSessionToken();
     let headers: HttpHeaders;
@@ -182,7 +182,7 @@ export class AlumnosService {
       headers = new HttpHeaders({ 'Content-Type': 'application/json' });
       console.log("No se encontró el token del usuario");
     }
-    return this.http.put<any>(`${environment.url_api}/maestros/`, data, { headers });
+    return this.http.put<any>(`${environment.url_api}/alumnos/`, data, { headers });
   }
 
 }
