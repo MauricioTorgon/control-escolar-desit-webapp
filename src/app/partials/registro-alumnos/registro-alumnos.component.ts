@@ -43,7 +43,6 @@ export class RegistroAlumnosComponent implements OnInit {
       //Al iniciar la vista asignamos los datos del user
       this.alumno = this.datos_user;
 
-      /* EDIT CHAT*/
       if(this.datos_user.user){
         this.alumno.first_name = this.datos_user.user.first_name;
         this.alumno.last_name = this.datos_user.user.last_name;

@@ -66,7 +66,6 @@ export class RegistroMaestrosComponent implements OnInit {
       //Al iniciar la vista asignamos los datos del user
       this.maestro = this.datos_user;
 
-      /* EDIT CHAT*/
       if(this.datos_user.user){
         this.maestro.first_name = this.datos_user.user.first_name;
         this.maestro.last_name = this.datos_user.user.last_name;
@@ -82,7 +81,6 @@ export class RegistroMaestrosComponent implements OnInit {
           this.maestro.materias_json = [];
         }
       }
-      /*EDIT CHAT */
 
     }else{
       // Si no va a this.editar, entonces inicializamos el JSON para registro nuevo

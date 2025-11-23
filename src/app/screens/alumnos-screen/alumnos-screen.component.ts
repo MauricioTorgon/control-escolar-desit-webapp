@@ -108,11 +108,12 @@ export class AlumnosScreenComponent implements OnInit {
     const userIdSession = Number(this.facadeService.getUserId());
     // --------- Pero el parametro idUser (el de la función) es el ID del maestro que se quiere eliminar ---------
     // Administrador puede eliminar cualquier maestro
-    // Maestro solo puede eliminar su propio registro
-    if (this.rol === 'administrador' || (this.rol === 'maestro' && userIdSession === idUser)) {
+    // Maestro puede eliminar cualquier alumno
+    // Alumno solo puede eliminar su propio registro
+    if (this.rol === 'administrador' || this.rol === 'maestro'|| (this.rol === 'alumno' && userIdSession === idUser)) {
       //Si es administrador o es maestro, es decir, cumple la condición, se puede eliminar
       const dialogRef = this.dialog.open(EliminarUserModalComponent,{
-        data: {id: idUser, rol: 'maestro'}, //Se pasan valores a través del componente
+        data: {id: idUser, rol: 'alumno'}, //Se pasan valores a través del componente
         height: '288px',
         width: '328px',
       });
