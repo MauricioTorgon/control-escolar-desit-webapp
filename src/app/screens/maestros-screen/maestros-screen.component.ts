@@ -41,11 +41,13 @@ export class MaestrosScreenComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    //this.facadeService.destroyUser();//¿borrar token cuando se elimina a sí mismo?
     this.name_user = this.facadeService.getUserCompleteName();
     this.rol = this.facadeService.getUserGroup();
     //Validar que haya inicio de sesión
     //Obtengo el token del login
     this.token = this.facadeService.getSessionToken();
+    
     console.log("Token: ", this.token);
     if(this.token == ""){
       this.router.navigate(["/"]);
@@ -99,8 +101,13 @@ export class MaestrosScreenComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     } 
   }
-  public goEditar(idUser: number) {
-    this.router.navigate(["registro-usuarios/maestros/" + idUser]);
+  public goEditar(idUser: number) {    
+    const userIdSession = Number(this.facadeService.getUserId());
+    if (this.rol === 'administrador' || (this.rol === 'maestro' && userIdSession === idUser)) {
+       this.router.navigate(["registro-usuarios/maestros/" + idUser]);
+    }else{
+      alert("No tienes permisos para editar este maestro.");
+    }
   }
 
   public delete(idUser: number) {

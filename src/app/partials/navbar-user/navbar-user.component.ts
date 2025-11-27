@@ -54,6 +54,7 @@ export class NavbarUserComponent implements OnInit {
       this.userInitial = '?';
     }
     this.userRole = this.facadeService.getUserGroup();
+    console.log('rol en NavbarUserComponent:', this.userRole);
     window.addEventListener('resize', () => {
       this.isMobileView = window.innerWidth <= 992;
       if (!this.isMobileView) {
@@ -96,6 +97,11 @@ export class NavbarUserComponent implements OnInit {
     const userId = this.facadeService.getUserId();
     const userRole = this.facadeService.getUserGroup();
     this.router.navigate([`/registro-usuarios/${userRole}/${userId}`]);
+    this.showUserMenu = false;
+  }
+
+  registrarMaterias() {
+    this.router.navigate([`/registro-materias/`]);
     this.showUserMenu = false;
   }
 
@@ -148,5 +154,7 @@ export class NavbarUserComponent implements OnInit {
   canSeeRegisterItem(): boolean {
     return this.isAdmin() || this.isTeacher();
   }
-
+  canSeeMaterias(): boolean {
+    return this.isAdmin();
+  }
 }

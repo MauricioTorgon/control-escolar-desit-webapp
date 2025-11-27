@@ -58,6 +58,8 @@ import { NavbarUserComponent } from './partials/navbar-user/navbar-user.componen
 import { SidebarComponent } from './partials/sidebar/sidebar.component';
 import { EliminarUserModalComponent } from './modals/eliminar-user-modal/eliminar-user-modal.component';
 import { GraficasScreenComponent } from './screens/graficas-screen/graficas-screen.component';
+import { MateriasScreenComponent } from './screens/materias-screen/materias-screen.component';
+import { RegistroMateriasComponent } from './partials/registro-materias/registro-materias.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +78,9 @@ import { GraficasScreenComponent } from './screens/graficas-screen/graficas-scre
     NavbarUserComponent,
     SidebarComponent,
     EliminarUserModalComponent,
-    GraficasScreenComponent
+    GraficasScreenComponent,
+    MateriasScreenComponent,
+    RegistroMateriasComponent
   ],
   imports: [
     BrowserModule,

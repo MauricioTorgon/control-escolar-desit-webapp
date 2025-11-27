@@ -10,7 +10,7 @@ import { FacadeService } from 'src/app/services/facade.service';
 export class SidebarComponent implements OnInit {
   mobileOpen = false;
   isMobileView = window.innerWidth < 900;
-  userRole: string = '';
+  //userRole: string = '';
 
   constructor(
     private router: Router,
@@ -18,8 +18,7 @@ export class SidebarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.userRole = this.facadeService.getUserGroup();
-    console.log('User role in sidebar:', this.userRole);
+    console.log('Sidebar creada');
   }
 
   @HostListener('window:resize')
@@ -58,15 +57,15 @@ export class SidebarComponent implements OnInit {
 
   // Helper methods to check user roles
   isAdmin(): boolean {
-    return this.userRole === 'administrador';
+    return this.facadeService.getUserGroup() === 'administrador';
   }
 
   isTeacher(): boolean {
-    return this.userRole === 'maestro';
+    return this.facadeService.getUserGroup() === 'maestro';
   }
 
   isStudent(): boolean {
-    return this.userRole === 'alumno';
+    return this.facadeService.getUserGroup() === 'alumno';
   }
 
   // Check if user can see admin-only items
@@ -92,4 +91,9 @@ export class SidebarComponent implements OnInit {
   canSeeRegisterItem(): boolean {
     return this.isAdmin() || this.isTeacher();
   }
+
+  canSeeMaterias(): boolean {
+    return (this.isAdmin() || !this.isTeacher() || !this.isStudent());
+  }
+
 }

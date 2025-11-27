@@ -100,7 +100,12 @@ export class AlumnosScreenComponent implements OnInit {
     } 
   }
   public goEditar(idUser: number) {
-    this.router.navigate(["registro-usuarios/alumnos/" + idUser]);
+    const userIdSession = Number(this.facadeService.getUserId());
+    if (this.rol === 'administrador' || this.rol==='maestro' || (this.rol === 'alumno' && userIdSession === idUser)) {
+       this.router.navigate(["registro-usuarios/alumnos/" + idUser]);
+    }else{
+      alert("No tienes permisos para editar este alumno.");
+    }
   }
 
   public delete(idUser: number) {
