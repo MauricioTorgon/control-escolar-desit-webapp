@@ -46,16 +46,15 @@
           <span>Eventos Académicos</span>
         </li>
         
-        <li *ngIf="canSeeAdminItems()" routerLink="/registro-materias" routerLinkActive="active"
-          (click)="closeSidebar()">
-          <mat-icon>library_books</mat-icon>
-          <span>Registrar materias </span>
+        <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()">
+          <mat-icon>add_box</mat-icon> <span>Registrar Materias</span>
         </li>
         
-        <li *ngIf="canSeeMaterias()" routerLink="/materias" routerLinkActive="active" (click)="closeSidebar()">
+        <!--<li *ngIf="canSeeMaterias()" routerLink="/materias" routerLinkActive="active" (click)="closeSidebar()">
           <mat-icon>class</mat-icon>
           <span>Lista de Materias</span>
         </li>
+        -->
       </ul>
 
       <button mat-flat-button color="warn" class="logout-btn" (click)="logout()">

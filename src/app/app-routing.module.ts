@@ -20,7 +20,8 @@ const routes: Routes = [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'login', component: LoginScreenComponent },
       { path: 'registro-usuarios', component: RegistroUsuariosScreenComponent },
-      { path: 'registro-usuarios/:rol/:id', component: RegistroUsuariosScreenComponent }
+      { path: 'registro-usuarios/:rol/:id', component: RegistroUsuariosScreenComponent },
+      { path: 'registro-materias', component: MateriasScreenComponent },
     ]
   },
   {
@@ -33,7 +34,7 @@ const routes: Routes = [
       { path: 'maestros', component: MaestrosScreenComponent },
       { path: 'graficas', component: GraficasScreenComponent },
       { path: 'materias', component: MateriasScreenComponent },
-      { path: 'registro-materias', component: RegistroMateriasComponent }
+      
     ]
   },
   // fallback route

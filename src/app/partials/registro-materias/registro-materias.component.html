@@ -1,10 +1,64 @@
-<div class="wrapper">
-  <div class="section-title">
-    <h2>Registro de Materias</h2>
-  </div>
-  <div class="section-content">
-    <div class="register-container">
-      <app-registro-materias></app-registro-materias>
-    </div>
-  </div>
-</div>
+<!-- Formularios (vistas) de cada usuario (inyección dinámica) -->
+      <div class="wrapper">
+        <div class="section-registro">
+          <div class="body-registro">
+            <div class="row mt-3 mb-3">
+              <div class="form-group col-12">
+                <label class="title-user" for="tipo_usuario">Ingresa los datos de la materia</label>
+              </div>
+            </div>
+
+            <mat-form-field class="mat-input" appearance="outline">
+              <mat-label>NRC</mat-label>
+              <input matInput [(ngModel)]="materia.nrc" name="nrc" placeholder="Escribe el NRC" type="number">
+            </mat-form-field>
+            <div *ngIf="errors.nrc" class="invalid-feedback">{{ errors.nrc }}</div>
+
+            <mat-form-field class="mat-input" appearance="outline">
+              <mat-label>Nombre de la materia</mat-label>
+              <input matInput [(ngModel)]="materia.nombre" name="nombre" placeholder="Escribe nombre de la materia">
+            </mat-form-field>
+            <div *ngIf="errors.nombre" class="invalid-feedback">{{ errors.nombre }}</div>
+
+            <mat-form-field class="mat-input" appearance="outline">
+              <mat-label>Sección</mat-label>
+              <input matInput [(ngModel)]="materia.seccion" name="seccion" placeholder="Escribe la sección">
+            </mat-form-field>
+            <div *ngIf="errors.seccion" class="invalid-feedback">{{ errors.seccion }}</div>
+
+            <div class="row mt-3 mb-3" style="width: 90%; margin-left: 5%;">
+              <div class="form-group col-12">
+                <label class="title-user" style="font-size: 18px; margin-bottom: 15px; display: block;">Días de
+                  clase</label>
+                <div class="checkbox-group" style="display: flex; flex-wrap: wrap; gap: 20px;">
+                  <mat-checkbox [(ngModel)]="dias.Lunes" name="Lunes" color="primary">Lunes</mat-checkbox>
+                  <mat-checkbox [(ngModel)]="dias.Martes" name="Martes" color="primary">Martes</mat-checkbox>
+                  <mat-checkbox [(ngModel)]="dias.Miercoles" name="Miercoles" color="primary">Miércoles</mat-checkbox>
+                  <mat-checkbox [(ngModel)]="dias.Jueves" name="Jueves" color="primary">Jueves</mat-checkbox>
+                  <mat-checkbox [(ngModel)]="dias.Viernes" name="Viernes" color="primary">Viernes</mat-checkbox>
+                  <mat-checkbox [(ngModel)]="dias.Sabado" name="Sabado" color="primary">Sábado</mat-checkbox>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="errors.dias" class="invalid-feedback">{{ errors.dias }}</div>
+
+            <mat-form-field class="mat-input" appearance="outline">
+              <mat-label>Hora Inicio</mat-label>
+              <input matInput [(ngModel)]="materia.horaInicio" name="horaInicio" type="time" placeholder="Hora Inicio">
+            </mat-form-field>
+            <div *ngIf="errors.horaInicio" class="invalid-feedback">{{ errors.horaInicio }}</div>
+
+            <mat-form-field class="mat-input" appearance="outline">
+              <mat-label>Hora Fin</mat-label>
+              <input matInput [(ngModel)]="materia.horaFin" name="horaFin" type="time" placeholder="Hora Fin">
+            </mat-form-field>
+            <div *ngIf="errors.horaFin" class="invalid-feedback">{{ errors.horaFin }}</div>
+
+            <div class="section-buttons">
+              <button class="btn btn-danger" (click)="regresar()">Cancelar</button>
+              <button *ngIf="!editar" class="btn btn-primary" type="submit" (click)="registrar()">Registrar</button>
+              <button *ngIf="editar" class="btn btn-primary" type="submit" (click)="actualizar()">Actualizar</button>
+            </div>
+          </div>
+        </div>
+      </div>

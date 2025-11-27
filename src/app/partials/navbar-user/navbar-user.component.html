@@ -84,10 +84,9 @@
           <span>Gráficas</span>
         </li>
 
-        <li *ngIf="canSeeTeacherItems()"
-          class="scoop-navbar-item" (click)="registrarMaterias()">
-          <span class="material-icons">class</span>
-          <span>Registrar Materias</span>
+        <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" class="scoop-navbar-item"
+        (click)="closeSidebar()">
+          <mat-icon>add_box</mat-icon> <span>Registrar Materias</span>
         </li>
 
         <li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active"
@@ -96,10 +95,10 @@
           <span>Eventos Académicos</span>
         </li>
         
-        <li *ngIf="canSeeAdminItems()" routerLink="/materias" routerLinkActive="active" (click)="closeSidebar()">
+        <!--<li *ngIf="canSeeAdminItems()" routerLink="/materias" routerLinkActive="active" (click)="closeSidebar()">
           <mat-icon>library_books</mat-icon>
           <span>Materias</span>
-        </li>
+        </li>-->
       </ul>
       <button class="scoop-logout-btn" (click)="logout(); closeSidebar()">
         <span class="material-icons">logout</span>
