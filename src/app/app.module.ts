@@ -63,6 +63,7 @@ import { RegistroMateriasComponent } from './partials/registro-materias/registro
 
 //Para el datepicker
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { ListaMateriasScreenComponent } from './screens/lista-materias-screen/lista-materias-screen.component';
 
 
 @NgModule({
@@ -84,7 +85,8 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
     EliminarUserModalComponent,
     GraficasScreenComponent,
     MateriasScreenComponent,
-    RegistroMateriasComponent
+    RegistroMateriasComponent,
+    ListaMateriasScreenComponent
   ],
   imports: [
     BrowserModule,

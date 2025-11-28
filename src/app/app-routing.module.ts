@@ -10,6 +10,7 @@ import { HomeScreenComponent } from './screens/home-screen/home-screen.component
 import { MaestrosScreenComponent } from './screens/maestros-screen/maestros-screen.component';
 import { GraficasScreenComponent } from './screens/graficas-screen/graficas-screen.component';
 import { MateriasScreenComponent } from './screens/materias-screen/materias-screen.component';
+import { ListaMateriasScreenComponent } from './screens/lista-materias-screen/lista-materias-screen.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
       { path: 'maestros', component: MaestrosScreenComponent },
       { path: 'graficas', component: GraficasScreenComponent },
       { path: 'materias', component: MateriasScreenComponent },
+      { path: 'lista-materias', component: ListaMateriasScreenComponent},
       
     ]
   },
