@@ -15,6 +15,8 @@ export class NavbarUserComponent implements OnInit {
   public showUserMenu: boolean = false;
   public mobileOpen: boolean = false;
   public userRole: string = '';
+  public isRegistrarOpen: boolean = false;
+
 
   // Estas variables se utilizarán por si se habilita el tema oscuro
   paletteMode: 'light' | 'dark' = 'light';
@@ -43,6 +45,10 @@ export class NavbarUserComponent implements OnInit {
     Object.keys(palette).forEach(key => {
       document.documentElement.style.setProperty(key, palette[key]);
     });
+  }
+  
+  toggleRegistrarDropdown() {
+    this.isRegistrarOpen = !this.isRegistrarOpen;
   }
 
   constructor(private router: Router, private facadeService: FacadeService) {

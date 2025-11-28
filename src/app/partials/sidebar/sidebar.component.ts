@@ -10,7 +10,8 @@ import { FacadeService } from 'src/app/services/facade.service';
 export class SidebarComponent implements OnInit {
   mobileOpen = false;
   isMobileView = window.innerWidth < 900;
-  //userRole: string = '';
+  // Variable para controlar el dropdown
+  public isRegistrarOpen: boolean = false;
 
   constructor(
     private router: Router,
@@ -31,6 +32,10 @@ export class SidebarComponent implements OnInit {
 
   toggleSidebar() {
     this.mobileOpen = !this.mobileOpen;
+  }
+
+  toggleRegistrarDropdown() {
+    this.isRegistrarOpen = !this.isRegistrarOpen;
   }
 
   closeSidebar() {

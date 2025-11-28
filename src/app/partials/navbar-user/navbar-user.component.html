@@ -2,11 +2,26 @@
   <!-- Desktop sidebar -->
   <nav class="scoop-side-navbar" *ngIf="!isMobileView">
     <ul class="scoop-navbar-list">
-      <li *ngIf="canSeeRegisterItem()" routerLink="/registro-usuarios" routerLinkActive="active"
+      <li *ngIf="canSeeRegisterItem()" (click)="toggleRegistrarDropdown()" [class.active]="isRegistrarOpen"
         class="scoop-navbar-item">
-        <span class="material-icons">person_add</span>
+        <mat-icon>add</mat-icon>
         <span>Registro</span>
       </li>
+
+      <div *ngIf="isRegistrarOpen">
+        <li routerLink="/registro-usuarios" routerLinkActive="active" (click)="closeSidebar()"
+          class="scoop-navbar-item">
+          <mat-icon>add_box</mat-icon>
+          <span>Usuarios</span>
+        </li>
+
+        <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()"
+          class="scoop-navbar-item">
+          <mat-icon>add_box</mat-icon>
+          <span>Materias</span>
+        </li>
+      </div>
+
       <li *ngIf="canSeeAdminItems()" routerLink="/administrador" routerLinkActive="active" class="scoop-navbar-item">
         <span class="material-icons">admin_panel_settings</span>
         <span>Admins</span>
@@ -33,10 +48,7 @@
         <span>Eventos Académicos</span>
       </li>
 
-      <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" class="scoop-navbar-item"
-        (click)="closeSidebar()">
-        <mat-icon>add_box</mat-icon> <span>Registrar Materias</span>
-      </li>
+
     </ul>
     <button class="scoop-logout-btn" (click)="logout()">
       <span class="material-icons">logout</span>
@@ -61,12 +73,25 @@
     <div class="mobile-sidebar-overlay" [ngClass]="{'mobile-open': mobileOpen}" (click)="closeSidebar()"></div>
     <nav class="scoop-side-navbar" [ngClass]="{'mobile-open': mobileOpen}">
       <ul class="scoop-navbar-list">
+          <li *ngIf="canSeeRegisterItem()" (click)="toggleRegistrarDropdown()" [class.active]="isRegistrarOpen"
+            class="scoop-navbar-item">
+            <mat-icon>add</mat-icon>
+            <span>Registro</span>
+          </li>
 
-        <li *ngIf="canSeeRegisterItem()" routerLink="/registro-usuarios" routerLinkActive="active"
-          class="scoop-navbar-item" (click)="closeSidebar()">
-          <span class="material-icons">person_add</span>
-          <span>Registro</span>
-        </li>
+          <div *ngIf="isRegistrarOpen">
+            <li routerLink="/registro-usuarios" routerLinkActive="active" (click)="closeSidebar()"
+              class="scoop-navbar-item">
+              <mat-icon>add_box</mat-icon>
+              <span>Usuarios</span>
+            </li>
+
+            <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()"
+              class="scoop-navbar-item">
+              <mat-icon>add_box</mat-icon>
+              <span>Materias</span>
+            </li>
+          </div>
         <li *ngIf="canSeeAdminItems()" routerLink="/administrador" routerLinkActive="active" class="scoop-navbar-item"
           (click)="closeSidebar()">
           <span class="material-icons">admin_panel_settings</span>
@@ -94,21 +119,11 @@
           <span>Lista de Materias</span>
         </li>
 
-        <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" class="scoop-navbar-item"
-          (click)="closeSidebar()">
-          <mat-icon>add_box</mat-icon> <span>Registrar Materias</span>
-        </li>
-
         <li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active"
           class="scoop-navbar-item" (click)="closeSidebar()">
           <span class="material-icons">event</span>
           <span>Eventos Académicos</span>
         </li>
-
-        <!--<li *ngIf="canSeeAdminItems()" routerLink="/materias" routerLinkActive="active" (click)="closeSidebar()">
-          <mat-icon>library_books</mat-icon>
-          <span>Materias</span>
-        </li>-->
       </ul>
       <button class="scoop-logout-btn" (click)="logout(); closeSidebar()">
         <span class="material-icons">logout</span>

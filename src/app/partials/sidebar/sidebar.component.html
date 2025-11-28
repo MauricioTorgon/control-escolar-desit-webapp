@@ -9,12 +9,26 @@
           <mat-icon>home</mat-icon>
           <span>Inicio</span>
         </li>
-        <li *ngIf="canSeeRegisterItem()" routerLink="/registro-usuarios" routerLinkActive="active"
-          (click)="closeSidebar()">
-          <mat-icon>person_add</mat-icon>
+        <!-- Registro - Dropdown menu-->
+        <li *ngIf="canSeeRegisterItem()" (click)="toggleRegistrarDropdown()" [class.active]="isRegistrarOpen"
+          class="scoop-navbar-item">
+          <mat-icon>add</mat-icon>
           <span>Registro</span>
         </li>
 
+        <div *ngIf="isRegistrarOpen">
+          <li routerLink="/registro-usuarios" routerLinkActive="active" (click)="closeSidebar()"
+            class="scoop-navbar-item">
+            <mat-icon>add_box</mat-icon>
+            <span>Registrar Usuarios</span>
+          </li>
+
+          <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()"
+            class="scoop-navbar-item">
+            <mat-icon>add_box</mat-icon>
+            <span>Registrar Materias</span>
+          </li>
+        </div>
         <!-- Admins - Only for administrators -->
         <li *ngIf="canSeeAdminItems()" routerLink="/administrador" routerLinkActive="active" (click)="closeSidebar()">
           <mat-icon>admin_panel_settings</mat-icon>
@@ -46,20 +60,10 @@
           <span>Eventos Académicos</span>
         </li>
 
-        <li *ngIf="canSeeMaterias()" routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()">
-          <mat-icon>add_box</mat-icon> <span>Registrar Materias</span>
-        </li>
-
         <li *ngIf="canSeeTeacherItems()" routerLink="/lista-materias" routerLinkActive="active"
           (click)="closeSidebar()">
           <mat-icon>library_books</mat-icon> <span>Lista de Materias</span>
         </li>
-
-        <!--<li *ngIf="canSeeMaterias()" routerLink="/materias" routerLinkActive="active" (click)="closeSidebar()">
-          <mat-icon>class</mat-icon>
-          <span>Lista de Materias</span>
-        </li>
-        -->
       </ul>
 
       <button mat-flat-button color="warn" class="logout-btn" (click)="logout()">
