@@ -62,6 +62,8 @@ import { MateriasScreenComponent } from './screens/materias-screen/materias-scre
 import { RegistroMateriasComponent } from './partials/registro-materias/registro-materias.component';
 
 //Para el datepicker
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+
 
 @NgModule({
   declarations: [
@@ -106,7 +108,8 @@ import { RegistroMateriasComponent } from './partials/registro-materias/registro
     MatPaginatorModule,
     MatSortModule,
     NgChartsModule,
-    MatDialogModule
+    MatDialogModule,
+    NgxMaterialTimepickerModule
   ],
   providers: [
     CookieService,

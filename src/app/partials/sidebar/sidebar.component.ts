@@ -93,7 +93,7 @@ export class SidebarComponent implements OnInit {
   }
 
   canSeeMaterias(): boolean {
-    return (this.isAdmin() || !this.isTeacher() || !this.isStudent());
+    return (this.isAdmin() || (!this.isTeacher() && !this.isStudent()));
   }
 
 }

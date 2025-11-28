@@ -46,7 +46,7 @@
           <span>Eventos Académicos</span>
         </li>
         
-        <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()">
+        <li *ngIf="canSeeMaterias()" routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()">
           <mat-icon>add_box</mat-icon> <span>Registrar Materias</span>
         </li>
         

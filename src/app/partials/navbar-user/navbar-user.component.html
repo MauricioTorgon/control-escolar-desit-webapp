@@ -33,6 +33,11 @@
         <span class="material-icons">event</span>
         <span>Eventos Académicos</span>
       </li>
+
+      <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" class="scoop-navbar-item"
+        (click)="closeSidebar()">
+          <mat-icon>add_box</mat-icon> <span>Registrar Materias</span>
+      </li>
     </ul>
     <button class="scoop-logout-btn" (click)="logout()">
       <span class="material-icons">logout</span>
