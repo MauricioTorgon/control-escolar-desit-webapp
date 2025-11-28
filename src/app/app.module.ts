@@ -61,6 +61,8 @@ import { GraficasScreenComponent } from './screens/graficas-screen/graficas-scre
 import { MateriasScreenComponent } from './screens/materias-screen/materias-screen.component';
 import { RegistroMateriasComponent } from './partials/registro-materias/registro-materias.component';
 
+//Para el datepicker
+
 @NgModule({
   declarations: [
     AppComponent,

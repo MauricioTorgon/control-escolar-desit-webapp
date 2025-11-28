@@ -10,7 +10,6 @@ import { HomeScreenComponent } from './screens/home-screen/home-screen.component
 import { MaestrosScreenComponent } from './screens/maestros-screen/maestros-screen.component';
 import { GraficasScreenComponent } from './screens/graficas-screen/graficas-screen.component';
 import { MateriasScreenComponent } from './screens/materias-screen/materias-screen.component';
-import { RegistroMateriasComponent } from './partials/registro-materias/registro-materias.component';
 
 const routes: Routes = [
   {

@@ -42,17 +42,47 @@
             </div>
             <div *ngIf="errors.dias" class="invalid-feedback">{{ errors.dias }}</div>
 
-            <mat-form-field class="mat-input" appearance="outline">
-              <mat-label>Hora Inicio</mat-label>
-              <input matInput [(ngModel)]="materia.horaInicio" name="horaInicio" type="time" placeholder="Hora Inicio">
-            </mat-form-field>
-            <div *ngIf="errors.horaInicio" class="invalid-feedback">{{ errors.horaInicio }}</div>
-
-            <mat-form-field class="mat-input" appearance="outline">
-              <mat-label>Hora Fin</mat-label>
-              <input matInput [(ngModel)]="materia.horaFin" name="horaFin" type="time" placeholder="Hora Fin">
-            </mat-form-field>
-            <div *ngIf="errors.horaFin" class="invalid-feedback">{{ errors.horaFin }}</div>
+            <div class="row time-row">
+              
+              <mat-form-field class="mat-input" appearance="outline" floatLabel="always">
+                <mat-label>Hora Inicio</mat-label>
+                <input matInput 
+                       mdc-datetime-picker="" 
+                       date="false" 
+                       time="true" 
+                       type="text" 
+                       id="timeInicio" 
+                       minutes="true" 
+                       minute-steps="15" 
+                       auto-ok="true" 
+                       format="hh:mm a" 
+                       short-time="true" 
+                       [(ngModel)]="materia.horaInicio" 
+                       name="horaInicio" 
+                       placeholder="Selecciona hora">
+              </mat-form-field>
+              <div *ngIf="errors.horaInicio" class="invalid-feedback">{{ errors.horaInicio }}</div>
+      
+              <mat-form-field class="mat-input" appearance="outline" floatLabel="always">
+                <mat-label>Hora Fin</mat-label>
+                <input matInput 
+                       mdc-datetime-picker="" 
+                       date="false" 
+                       time="true" 
+                       type="text" 
+                       id="timeFin" 
+                       minutes="true" 
+                       minute-steps="15" 
+                       auto-ok="true" 
+                       format="hh:mm a" 
+                       short-time="true" 
+                       [(ngModel)]="materia.horaFin" 
+                       name="horaFin" 
+                       placeholder="Selecciona hora">
+              </mat-form-field>
+              <div *ngIf="errors.horaFin" class="invalid-feedback">{{ errors.horaFin }}</div>
+              
+            </div>
 
             <div class="section-buttons">
               <button class="btn btn-danger" (click)="regresar()">Cancelar</button>

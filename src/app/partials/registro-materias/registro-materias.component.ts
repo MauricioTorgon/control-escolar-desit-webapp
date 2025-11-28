@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
+import { MateriasService } from 'src/app/services/materias.service';
 
 @Component({
   selector: 'app-registro-materias',
@@ -34,6 +35,7 @@ export class RegistroMateriasComponent implements OnInit {
     private router: Router,
     private facadeService: FacadeService,
     private validatorsService: FacadeService,
+    private materiasService: MateriasService
   ) { }
 
   ngOnInit(): void {
@@ -42,32 +44,41 @@ export class RegistroMateriasComponent implements OnInit {
 registrar() {
     // Limpiar errores previos
     this.errors = {}; 
+    // Validación
+  // Convertir días booleanos a array para validar y enviar
+  const diasSeleccionados = Object.keys(this.dias).filter(dia => this.dias[dia as keyof typeof this.dias]);
+  
+  // Preparar objeto para validación y envío (Mapping camelCase -> snake_case)
+  const datosParaEnvio = {
+    nrc: this.materia.nrc,
+    nombre: this.materia.nombre,
+    seccion: this.materia.seccion,
+    dias: diasSeleccionados,
+    hora_inicio: this.materia.horaInicio, // Mapping importante para Django
+    hora_fin: this.materia.horaFin        // Mapping importante para Django
+  };
 
-    // Validación manual simple (puedes mejorarla con validators.service después)
-    if (!this.materia.nrc) { this.errors.nrc = "El NRC es requerido"; }
-    if (!this.materia.nombre) { this.errors.nombre = "El nombre es requerido"; }
-    if (!this.materia.seccion) { this.errors.seccion = "La sección es requerida"; }
-    if (!this.materia.horaInicio) { this.errors.horaInicio = "La hora de inicio es requerida"; }
-    if (!this.materia.horaFin) { this.errors.horaFin = "La hora de fin es requerida"; }
+  // Usar validador del servicio si lo deseas, o tu validación local.
+  // Si usas tu validación local, solo asegúrate de checkear diasSeleccionados.length
+  
+  if (diasSeleccionados.length == 0) {
+    alert("Selecciona al menos un día");
+    return;
+  }
 
-    // Validar días
-    const diasSeleccionados = Object.keys(this.dias).filter(dia => this.dias[dia as keyof typeof this.dias]);
-    if (diasSeleccionados.length === 0) {
-      this.errors.dias = "Selecciona al menos un día";
-      alert("Selecciona al menos un día"); // Feedback rápido
-      return;
+  // Enviar al servicio
+  this.materiasService.registrarMateria(datosParaEnvio).subscribe(
+    (response) => {
+      alert("Materia registrada correctamente");
+      console.log("Respuesta servidor:", response);
+      this.router.navigate(['/home']); // O a '/materias' cuando exista la lista
+    },
+    (error) => {
+      console.error("Error al registrar:", error);
+      alert("Error al registrar la materia: " + (error.error.message || "Error desconocido"));
     }
-
-    // Si hay errores en el objeto, detener
-    if (Object.keys(this.errors).length > 0) {
-      return;
-    }
-
-    // ... lógica de envío
-    const datosFinales = { ...this.materia, dias: diasSeleccionados };
-    console.log("Datos válidos:", datosFinales);
-    alert("Materia registrada con éxito");
-    this.router.navigate(['/home']);
+  );
+   
   }
   
   actualizar() {
