@@ -10,7 +10,7 @@
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>NRC</mat-label>
-        <input matInput [(ngModel)]="materia.nrc" name="nrc" placeholder="Escribe el NRC" type="number">
+        <input matInput [(ngModel)]="materia.nrc" name="nrc" placeholder="Escribe el NRC" type="number" min="0" >
       </mat-form-field>
       <div *ngIf="errors.nrc" class="invalid-feedback">{{ errors.nrc }}</div>
 
@@ -26,67 +26,62 @@
       </mat-form-field>
       <div *ngIf="errors.seccion" class="invalid-feedback">{{ errors.seccion }}</div>
 
-      <div class="row mt-3 mb-3" style="width: 90%; margin-left: 5%;">
-        <div class="form-group col-12">
-          <label class="title-user" style="font-size: 18px; margin-bottom: 15px; display: block;">Días de
-            clase</label>
-          <div class="checkbox-group" style="display: flex; flex-wrap: wrap; gap: 20px;">
-            <mat-checkbox [(ngModel)]="dias.Lunes" name="Lunes" color="primary">Lunes</mat-checkbox>
-            <mat-checkbox [(ngModel)]="dias.Martes" name="Martes" color="primary">Martes</mat-checkbox>
-            <mat-checkbox [(ngModel)]="dias.Miercoles" name="Miercoles" color="primary">Miércoles</mat-checkbox>
-            <mat-checkbox [(ngModel)]="dias.Jueves" name="Jueves" color="primary">Jueves</mat-checkbox>
-            <mat-checkbox [(ngModel)]="dias.Viernes" name="Viernes" color="primary">Viernes</mat-checkbox>
-            <mat-checkbox [(ngModel)]="dias.Sabado" name="Sabado" color="primary">Sábado</mat-checkbox>
+      <!-- Selección de días de clase -->
+      <div class="select-materias">
+        <div class="row mt-3 mb-3">
+          <div class="form-group col-12">
+            <label class="title-materias" for="tipo_usuario">Selecciona los días de clase que se impartirá la materia</label>
+          </div>
+          <div class="checkbox-group" style="display:flex; flex-direction: column;">
+            <mat-checkbox class="checkbox-item opc-sc" [(ngModel)]="dias.Lunes" name="Lunes" color="primary">
+              <div class="d-checkbox-nombre">Lunes</div>
+            </mat-checkbox>
+            <mat-checkbox class="checkbox-item opc-sc" [(ngModel)]="dias.Martes" name="Martes" color="primary">
+              <div class="d-checkbox-nombre">Martes</div>
+            </mat-checkbox>
+            <mat-checkbox class="checkbox-item opc-sc" [(ngModel)]="dias.Miercoles" name="Miercoles" color="primary">
+              <div class="d-checkbox-nombre">Miércoles</div>
+            </mat-checkbox>
+            <mat-checkbox class="checkbox-item opc-sc" [(ngModel)]="dias.Jueves" name="Jueves" color="primary">
+              <div class="d-checkbox-nombre">Jueves</div>
+            </mat-checkbox>
+            <mat-checkbox class="checkbox-item opc-sc" [(ngModel)]="dias.Viernes" name="Viernes" color="primary">
+              <div class="d-checkbox-nombre">Viernes</div>
+            </mat-checkbox>
+            <mat-checkbox class="checkbox-item opc-sc" [(ngModel)]="dias.Sabado" name="Sabado" color="primary">
+              <div class="d-checkbox-nombre">Sábado</div>
+            </mat-checkbox>
           </div>
         </div>
       </div>
+
+
       <div *ngIf="errors.dias" class="invalid-feedback">{{ errors.dias }}</div>
 
       <!--NGX Time Picker-->
       <div class="row time-row">
-          <mat-form-field class="mat-input" appearance="outline">
-            <mat-label>Hora Inicio</mat-label>
-            <input matInput [ngxTimepicker]="pickerInicio" [format]="24" placeholder="Selecciona hora"
-              [(ngModel)]="materia.horaInicio" name="horaInicio" readonly>
-            <ngx-material-timepicker-toggle matSuffix [for]="pickerInicio">
-              <mat-icon matDatepickerToggleIcon>access_time</mat-icon>
-            </ngx-material-timepicker-toggle>
-            <ngx-material-timepicker #pickerInicio></ngx-material-timepicker>
-          </mat-form-field>
-          <div *ngIf="errors.horaInicio" class="invalid-feedback">{{ errors.horaInicio }}</div>
+        <mat-form-field class="mat-input" appearance="outline">
+          <mat-label>Hora Inicio</mat-label>
+          <input matInput [ngxTimepicker]="pickerInicio" [format]="24" placeholder="Selecciona hora"
+            [(ngModel)]="materia.horaInicio" name="horaInicio" readonly>
+          <ngx-material-timepicker-toggle matSuffix [for]="pickerInicio">
+            <mat-icon matDatepickerToggleIcon>access_time</mat-icon>
+          </ngx-material-timepicker-toggle>
+          <ngx-material-timepicker #pickerInicio></ngx-material-timepicker>
+        </mat-form-field>
+        <div *ngIf="errors.horaInicio" class="invalid-feedback">{{ errors.horaInicio }}</div>
 
-          <mat-form-field class="mat-input" appearance="outline">
-            <mat-label>Hora Fin</mat-label>
-            <input matInput [ngxTimepicker]="pickerFin" [format]="24" placeholder="Selecciona hora"
-              [(ngModel)]="materia.horaFin" name="horaFin" readonly>
-            <ngx-material-timepicker-toggle matSuffix [for]="pickerFin">
-              <mat-icon matDatepickerToggleIcon>access_time</mat-icon>
-            </ngx-material-timepicker-toggle>
-            <ngx-material-timepicker #pickerFin></ngx-material-timepicker>
-          </mat-form-field>
-          <div *ngIf="errors.horaFin" class="invalid-feedback">{{ errors.horaFin }}</div>
+        <mat-form-field class="mat-input" appearance="outline">
+          <mat-label>Hora Fin</mat-label>
+          <input matInput [ngxTimepicker]="pickerFin" [format]="24" placeholder="Selecciona hora"
+            [(ngModel)]="materia.horaFin" name="horaFin" readonly>
+          <ngx-material-timepicker-toggle matSuffix [for]="pickerFin">
+            <mat-icon matDatepickerToggleIcon>access_time</mat-icon>
+          </ngx-material-timepicker-toggle>
+          <ngx-material-timepicker #pickerFin></ngx-material-timepicker>
+        </mat-form-field>
+        <div *ngIf="errors.horaFin" class="invalid-feedback">{{ errors.horaFin }}</div>
       </div>
-      
-      <!--Version del profe 
-      <div class="row time-row">
-      <mat-form-field class="mat-input form-field" appearance="outline">
-        <mat-label>Hora Inicio</mat-label>
-        <input matInput [ngxTimepicker]="inicioPicker" readonly placeholder="Escribe la hora de inicio" 
-        [(ngModel)]="materia.horaInicio" (ngModelChange)="changeHoraInicioChange($event)">
-        <ngx-material-timepicker #inicioPicker></ngx-material-timepicker>
-      </mat-form-field>
-      <div *ngIf="errors.horaInicio" class="invalid-feedback">{{ errors.horaInicio }}</div>
-
-
-      <mat-form-field class="mat-input form-field" appearance="outline">
-        <mat-label>Hora Fin</mat-label>
-        <input matInput [ngxTimepicker]="finPicker" readonly placeholder="Escribe la hora de fin" 
-        [(ngModel)]="materia.horaFin" (ngModelChange)="changeHoraFinChange($event)">
-        <ngx-material-timepicker #finPicker></ngx-material-timepicker>
-      </mat-form-field>
-      <div *ngIf="errors.horaFin" class="invalid-feedback">{{ errors.horaFin }}</div>
-      </div>
-    fin-->
 
       <div class="section-buttons">
         <button class="btn btn-danger" (click)="regresar()">Cancelar</button>
