@@ -16,19 +16,19 @@
           <span>Registro</span>
         </li>
 
-        <div *ngIf="isRegistrarOpen">
+        <ng-container *ngIf="isRegistrarOpen">
           <li routerLink="/registro-usuarios" routerLinkActive="active" (click)="closeSidebar()"
-            class="scoop-navbar-item">
+            class="scoop-navbar-item" style="background-color: #122645;">
             <mat-icon>add_box</mat-icon>
             <span>Registrar Usuarios</span>
           </li>
 
-          <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()"
-            class="scoop-navbar-item">
+          <li routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()"
+            class="scoop-navbar-item" style="background-color: #122645;">
             <mat-icon>add_box</mat-icon>
             <span>Registrar Materias</span>
           </li>
-        </div>
+        </ng-container>
         <!-- Admins - Only for administrators -->
         <li *ngIf="canSeeAdminItems()" routerLink="/administrador" routerLinkActive="active" (click)="closeSidebar()">
           <mat-icon>admin_panel_settings</mat-icon>

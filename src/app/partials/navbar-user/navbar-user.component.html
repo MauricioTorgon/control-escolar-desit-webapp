@@ -2,26 +2,25 @@
   <!-- Desktop sidebar -->
   <nav class="scoop-side-navbar" *ngIf="!isMobileView">
     <ul class="scoop-navbar-list">
-      <li *ngIf="canSeeRegisterItem()" (click)="toggleRegistrarDropdown()" [class.active]="isRegistrarOpen"
-        class="scoop-navbar-item">
-        <mat-icon>add</mat-icon>
-        <span>Registro</span>
-      </li>
-
-      <div *ngIf="isRegistrarOpen">
-        <li routerLink="/registro-usuarios" routerLinkActive="active" (click)="closeSidebar()"
+        <li *ngIf="canSeeRegisterItem()" (click)="toggleRegistrarDropdown()" [class.active]="isRegistrarOpen"
           class="scoop-navbar-item">
-          <mat-icon>add_box</mat-icon>
-          <span>Usuarios</span>
+          <mat-icon>add</mat-icon>
+          <span>Registro</span>
         </li>
 
-        <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()"
-          class="scoop-navbar-item">
-          <mat-icon>add_box</mat-icon>
-          <span>Materias</span>
-        </li>
-      </div>
+        <ng-container *ngIf="isRegistrarOpen">
+          <li routerLink="/registro-usuarios" routerLinkActive="active" (click)="closeSidebar()"
+            class="scoop-navbar-item" style="background-color: #122645;">
+            <mat-icon>add_box</mat-icon>
+            <span>Usuarios</span>
+          </li>
 
+          <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()"
+            class="scoop-navbar-item" style="background-color: #122645;">
+            <mat-icon>add_box</mat-icon>
+            <span>Materias</span>
+          </li>
+        </ng-container>
       <li *ngIf="canSeeAdminItems()" routerLink="/administrador" routerLinkActive="active" class="scoop-navbar-item">
         <span class="material-icons">admin_panel_settings</span>
         <span>Admins</span>
@@ -73,25 +72,25 @@
     <div class="mobile-sidebar-overlay" [ngClass]="{'mobile-open': mobileOpen}" (click)="closeSidebar()"></div>
     <nav class="scoop-side-navbar" [ngClass]="{'mobile-open': mobileOpen}">
       <ul class="scoop-navbar-list">
-          <li *ngIf="canSeeRegisterItem()" (click)="toggleRegistrarDropdown()" [class.active]="isRegistrarOpen"
-            class="scoop-navbar-item">
-            <mat-icon>add</mat-icon>
-            <span>Registro</span>
+        <li *ngIf="canSeeRegisterItem()" (click)="toggleRegistrarDropdown()" [class.active]="isRegistrarOpen"
+          class="scoop-navbar-item">
+          <mat-icon>add</mat-icon>
+          <span>Registro</span>
+        </li>
+
+        <ng-container *ngIf="isRegistrarOpen">
+          <li routerLink="/registro-usuarios" routerLinkActive="active" (click)="closeSidebar()"
+            class="scoop-navbar-item" style="background-color: #122645;">
+            <mat-icon>add_box</mat-icon>
+            <span>Usuarios</span>
           </li>
 
-          <div *ngIf="isRegistrarOpen">
-            <li routerLink="/registro-usuarios" routerLinkActive="active" (click)="closeSidebar()"
-              class="scoop-navbar-item">
-              <mat-icon>add_box</mat-icon>
-              <span>Usuarios</span>
-            </li>
-
-            <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()"
-              class="scoop-navbar-item">
-              <mat-icon>add_box</mat-icon>
-              <span>Materias</span>
-            </li>
-          </div>
+          <li *ngIf="isAdmin()" routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()"
+            class="scoop-navbar-item" style="background-color: #122645;">
+            <mat-icon>add_box</mat-icon>
+            <span>Materias</span>
+          </li>
+        </ng-container>
         <li *ngIf="canSeeAdminItems()" routerLink="/administrador" routerLinkActive="active" class="scoop-navbar-item"
           (click)="closeSidebar()">
           <span class="material-icons">admin_panel_settings</span>
