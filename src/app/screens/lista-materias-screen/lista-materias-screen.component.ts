@@ -87,41 +87,34 @@ export class ListaMateriasScreenComponent implements OnInit {
     }
   }
 
-  // Ir a editar (Solo Admin podrá ver el botón, pero protegemos la función por si acaso)
   goEditar(idMateria: number) {
     if (this.rol === 'administrador') {
-      this.router.navigate(['/registro-materias/editar', idMateria]); // Ajusta la ruta si planeas usar el mismo form
+      this.router.navigate(['/registro-materias/', idMateria]);
     } else {
       alert("No tienes permisos para editar.");
     }
   }
 
-  // Eliminar materia
   delete(idMateria: number) {
-    if (this.rol === 'administrador') {
-      const dialogRef = this.dialog.open(EliminarUserModalComponent, {
-        data: { id: idMateria, rol: 'materia' }, // Pasamos 'materia' para que el modal sepa qué texto mostrar (si está configurado genérico)
-        height: '288px',
-        width: '328px',
-      });
 
-      dialogRef.afterClosed().subscribe(result => {
-        if (result && result.isDelete) {
-          // Llamar al servicio de eliminación
-          this.materiasService.eliminarMateria(idMateria).subscribe(
-            (response) => {
-              alert("Materia eliminada correctamente");
-              this.obtenerMaterias(); // Recargar tabla
-            },
-            (error) => {
-              alert("Error al eliminar la materia");
-              console.error(error);
-            }
-          );
+    const dialogRef = this.dialog.open(EliminarUserModalComponent, {
+      data: { id: idMateria, rol: 'materia' }, // Pasamos datos visuales
+      height: '288px',
+      width: '328px',
+    });
+
+    // Esperamos a que se cierre
+    dialogRef.afterClosed().subscribe(result => {
+      // Si el resultado es "isDelete: true", entonces procedemos a llamar al servicio
+      if (result.isDelete) {
+          console.log("Materia eliminada");
+          alert("Materia eliminada correctamente.");
+          //Recargar página
+          window.location.reload();
+        } else {
+          alert("La materia no se ha podido eliminar.");
+          console.log("No se eliminó la Materia");
         }
-      });
-    } else {
-      alert("No tienes permisos para eliminar.");
-    }
+    });
   }
 }

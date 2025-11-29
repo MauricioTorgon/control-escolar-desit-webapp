@@ -1,14 +1,12 @@
 <div class="wrapper">
   <div class="icon-close">
-      <button class="btn" (click)="cerrar_modal()">
+      <button class="btn" (click)="cerrar_modal()" title="click para cerrar">
           <i class="bi bi-x-lg"></i>
       </button>
   </div>
   <div class="body-modal">
       <h1 class="title-modal">Eliminar {{rol}}</h1>
-      <span *ngIf="!isMateria()" class="descripcion">Estás a punto de eliminar este {{rol}}. Una vez que lo elimines no podrás deshacer esta acción.</span>
-      <span *ngIf="isMateria()" class="descripcion">Estás a punto de eliminar esta {{rol}}. Una vez que la elimines no podrás deshacer esta acción.</span>
-      
+      <span class="descripcion">Estás a punto de eliminar este {{rol}}. Una vez que lo elimines no podrás deshacer esta acción.</span>
       <div class="buttons-modal">
           <button mat-button class="btn-regresar" (click)="cerrar_modal()">
               Cancelar

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MateriasService } from 'src/app/services/materias.service';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
@@ -10,9 +10,9 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
   styleUrls: ['./registro-materias.component.scss']
 })
 export class RegistroMateriasComponent implements OnInit {
-
   errors: any = {};
   public editar: boolean = false;
+  private idMateria: any = "";
   // Modelo de datos simple
   materia = {
     nrc: '',
@@ -36,10 +36,17 @@ export class RegistroMateriasComponent implements OnInit {
     private router: Router,
     private facadeService: FacadeService,
     private validatorsService: FacadeService,
-    private materiasService: MateriasService
+    private materiasService: MateriasService,
+    private activeRoute: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    const id = this.activeRoute.snapshot.params['id'];
+    if (id) {
+      this.editar = true;
+      this.idMateria = id;
+      this.cargarMateria(); // Función nueva
+    }
   }
 
   registrar() {
@@ -83,8 +90,51 @@ export class RegistroMateriasComponent implements OnInit {
   }
 
   actualizar() {
-    // Lógica futura para edición
-    console.log("Actualizando...");
+    // Misma validación que registrar...
+    const diasSeleccionados = Object.keys(this.dias).filter(dia => this.dias[dia as keyof typeof this.dias]);
+    if (diasSeleccionados.length == 0) { alert("Selecciona días"); return; }
+
+    const datos = {
+      id: this.idMateria,
+      nrc: this.materia.nrc,
+      nombre: this.materia.nombre,
+      seccion: this.materia.seccion,
+      dias: diasSeleccionados,
+      hora_inicio: this.materia.horaInicio,
+      hora_fin: this.materia.horaFin
+    };
+
+    this.materiasService.actualizarMateria(datos).subscribe(
+      (response) => {
+        alert("Materia actualizada correctamente");
+        this.router.navigate(['/home']);
+      },
+      (error) => {
+        alert("Error al actualizar");
+      }
+    );
+  }
+
+  cargarMateria() {
+    this.materiasService.getMateriaByID(this.idMateria).subscribe(
+      (response) => {
+        this.materia.nrc = response.nrc;
+        this.materia.nombre = response.nombre;
+        this.materia.seccion = response.seccion;
+        this.materia.horaInicio = response.hora_inicio;
+        this.materia.horaFin = response.hora_fin;
+
+        if (response.dias) {
+           response.dias.forEach((dia: any) => {
+             // TypeScript trick para acceder por string
+             (this.dias as any)[dia] = true; 
+           });
+        }
+      },
+      (error) => {
+        alert("No se pudo obtener la materia");
+      }
+    );
   }
 
   regresar() {

@@ -76,9 +76,6 @@ export class MateriasService {
     } else {
       headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     }
-    // NOTA: Asegúrate que los nombres de los campos coincidan con lo que espera Django
-    // Django espera: nrc, nombre, seccion, dias (array), hora_inicio, hora_fin
-    // Angular manda camelCase, haremos la conversión en el componente o aquí mismo si prefieres.
     return this.http.post<any>(`${environment.url_api}/materias/`, data, { headers });
   }
 
@@ -104,5 +101,29 @@ export class MateriasService {
     return this.http.delete<any>(`${environment.url_api}/materias/?id=${idMateria}`, { headers });
   }
   
-  // Agregar editar si es necesario más adelante
+  // Obtener una sola materia por ID (para editar)
+  public getMateriaByID(id: number): Observable<any> {
+    // Verificamos si existe el token de sesión
+    const token = this.facadeService.getSessionToken();
+    let headers: HttpHeaders;
+    if (token) {
+      headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    } else {
+      headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    }
+    return this.http.get<any>(`${environment.url_api}/materias/?id=${id}`, { headers });
+  }
+
+  // Actualizar materia
+  public actualizarMateria(data: any): Observable<any> {
+    const token = this.facadeService.getSessionToken();
+    let headers: HttpHeaders;
+    if (token) {
+      headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    } else {
+      headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+      console.log("No se encontró el token del usuario");
+    }
+    return this.http.put<any>(`${environment.url_api}/materias/`, data, { headers });
+  }
 }

@@ -11,6 +11,7 @@ import { MaestrosScreenComponent } from './screens/maestros-screen/maestros-scre
 import { GraficasScreenComponent } from './screens/graficas-screen/graficas-screen.component';
 import { MateriasScreenComponent } from './screens/materias-screen/materias-screen.component';
 import { ListaMateriasScreenComponent } from './screens/lista-materias-screen/lista-materias-screen.component';
+import { RegistroMateriasComponent } from './partials/registro-materias/registro-materias.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,7 @@ const routes: Routes = [
       { path: 'registro-usuarios', component: RegistroUsuariosScreenComponent },
       { path: 'registro-usuarios/:rol/:id', component: RegistroUsuariosScreenComponent },
       { path: 'registro-materias', component: MateriasScreenComponent },
+      { path: 'registro-materias/:id', component: MateriasScreenComponent }, 
     ]
   },
   {
