@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common'; // Importación necesaria
+import { Router, ActivatedRoute } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MateriasService } from 'src/app/services/materias.service';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { MaestrosService } from 'src/app/services/maestros.service';
+import { ValidatorService } from 'src/app/services/tools/validator.service';
 
 @Component({
   selector: 'app-registro-materias',
@@ -13,123 +15,124 @@ export class RegistroMateriasComponent implements OnInit {
   errors: any = {};
   public editar: boolean = false;
   private idMateria: any = "";
-  // Modelo de datos simple
-  materia = {
-    nrc: '',
-    nombre: '',
-    seccion: '',
-    horaInicio: '',
-    horaFin: ''
-  };
+  public lista_maestros: any[] = [];
 
-  // Checkboxes para días (Modelo separado para facilitar el manejo)
-  dias = {
-    Lunes: false,
-    Martes: false,
-    Miercoles: false,
-    Jueves: false,
-    Viernes: false,
-    Sabado: false
-  };
+  // Inicialización del modelo
+  materia: any = {};
+  dias: any = {};
+
+  // Opciones de programa
+  programas = [
+    { value: 'Ingeniería en Ciencias de la Computación', viewValue: 'Ingeniería en Ciencias de la Computación' },
+    { value: 'Licenciatura en Ciencias de la Computación', viewValue: 'Licenciatura en Ciencias de la Computación' },
+    { value: 'Ingeniería en Tecnologías de la Información', viewValue: 'Ingeniería en Tecnologías de la Información' }
+  ];
 
   constructor(
+    private location: Location,
     private router: Router,
-    private facadeService: FacadeService,
-    private validatorsService: FacadeService,
+    private activeRoute: ActivatedRoute,
     private materiasService: MateriasService,
-    private activeRoute: ActivatedRoute
+    private maestrosService: MaestrosService,
+    private validatorService: ValidatorService
   ) { }
 
   ngOnInit(): void {
+    // Inicializar modelos desde el servicio para asegurar estructura
+    this.materia = this.materiasService.esquemaMateria();
+    this.dias = { Lunes: false, Martes: false, Miercoles: false, Jueves: false, Viernes: false, Sabado: false };
+
+    this.obtenerMaestros();
+
     const id = this.activeRoute.snapshot.params['id'];
     if (id) {
       this.editar = true;
       this.idMateria = id;
-      this.cargarMateria(); // Función nueva
+      this.cargarMateria();
     }
   }
 
-  registrar() {
-    // Limpiar errores previos
-    this.errors = {};
-    // Validación
-    // Convertir días booleanos a array para validar y enviar
-    const diasSeleccionados = Object.keys(this.dias).filter(dia => this.dias[dia as keyof typeof this.dias]);
+  obtenerMaestros() {
+    this.maestrosService.obtenerListaMaestros().subscribe(
+      (response) => {
+        this.lista_maestros = response;
+        // Formatear nombre para mostrarlo bonito en el select
+        this.lista_maestros.forEach(maestro => {
+          maestro.nombreCompleto = maestro.user.first_name + " " + maestro.user.last_name;
+        });
+      },
+      (error) => { alert("Error al obtener maestros"); }
+    );
+  }
 
-    // Preparar objeto para validación y envío (Mapping camelCase -> snake_case)
+  actualizarDiasSeleccionados() {
+    const diasSeleccionados = Object.keys(this.dias).filter(dia => this.dias[dia as keyof typeof this.dias]);
+    //this.materia.dias = diasSeleccionados;
     const datosParaEnvio = {
       nrc: this.materia.nrc,
       nombre: this.materia.nombre,
       seccion: this.materia.seccion,
       dias: diasSeleccionados,
-      hora_inicio: this.materia.horaInicio, // Mapping importante para Django
-      hora_fin: this.materia.horaFin        // Mapping importante para Django
+      hora_inicio: this.materia.horaInicio,
+      hora_fin: this.materia.horaFin,
+      salon: this.materia.salon,
+      programa: this.materia.programa,
+      profesor: this.materia.profesor,
+      creditos: this.materia.creditos
     };
+    return datosParaEnvio;
+  }
 
-    // Usar validador del servicio si lo deseas, o tu validación local.
-    // Si usas tu validación local, solo asegúrate de checkear diasSeleccionados.length
+  registrar() {
+    this.errors = {};
+    //const diasSeleccionados = Object.keys(this.dias).filter(dia => this.dias[dia as keyof typeof this.dias]);
 
-    if (diasSeleccionados.length == 0) {
-      alert("Selecciona al menos un día");
-      return;
-    }
+    // Asignar el ID del profesor seleccionado directamente al modelo si es necesario
+    // (Angular Material lo hace automático con ngModel, pero verificamos)
 
-    // Enviar al servicio
+    const datosParaEnvio = this.actualizarDiasSeleccionados();
+
+    this.errors = this.materiasService.validarMateria(datosParaEnvio);
+    if (Object.keys(this.errors).length > 0) return;
+
     this.materiasService.registrarMateria(datosParaEnvio).subscribe(
       (response) => {
         alert("Materia registrada correctamente");
-        console.log("Respuesta servidor:", response);
-        this.router.navigate(['/home']); // O a '/materias' cuando exista la lista
+        this.router.navigate(['/home']);
       },
-      (error) => {
-        console.error("Error al registrar:", error);
-        alert("Error al registrar la materia: " + (error.error.message || "Error desconocido"));
-      }
+      (error) => { alert("Error al registrar: " + error.error.message); }
     );
-
   }
 
   actualizar() {
-    // Misma validación que registrar...
-    const diasSeleccionados = Object.keys(this.dias).filter(dia => this.dias[dia as keyof typeof this.dias]);
-    if (diasSeleccionados.length == 0) { alert("Selecciona días"); return; }
+    // Lógica similar a registrar pero con actualizarMateria
+    //const diasSeleccionados = Object.keys(this.dias).filter(dia => this.dias[dia as keyof typeof this.dias]);
 
-    const datos = {
-      id: this.idMateria,
-      nrc: this.materia.nrc,
-      nombre: this.materia.nombre,
-      seccion: this.materia.seccion,
-      dias: diasSeleccionados,
-      hora_inicio: this.materia.horaInicio,
-      hora_fin: this.materia.horaFin
-    };
+    const datosParaEnvio = this.actualizarDiasSeleccionados();
 
-    this.materiasService.actualizarMateria(datos).subscribe(
+    this.errors = this.materiasService.validarMateria(datosParaEnvio);
+    if (Object.keys(this.errors).length > 0) return;
+
+    this.materiasService.actualizarMateria(datosParaEnvio).subscribe(
       (response) => {
-        alert("Materia actualizada correctamente");
+        alert("Materia actualizada");
         this.router.navigate(['/home']);
       },
-      (error) => {
-        alert("Error al actualizar");
-      }
+      (error) => { alert("Error al actualizar"); }
     );
   }
 
   cargarMateria() {
     this.materiasService.getMateriaByID(this.idMateria).subscribe(
       (response) => {
-        this.materia.nrc = response.nrc;
-        this.materia.nombre = response.nombre;
-        this.materia.seccion = response.seccion;
-        this.materia.horaInicio = response.hora_inicio;
-        this.materia.horaFin = response.hora_fin;
-
+        this.materia = response;
+        // Mapear campos de snake_case (Django) a camelCase si tu servicio no lo hace
+        // Asumiendo que el servicio ya lo devuelve limpio o usas el mismo nombre:
         if (response.dias) {
-           response.dias.forEach((dia: any) => {
-             // TypeScript trick para acceder por string
-             (this.dias as any)[dia] = true; 
-           });
+          response.dias.forEach((dia: any) => { (this.dias as any)[dia] = true; });
         }
+        this.materia.horaInicio = response.hora_inicio ? response.hora_inicio.slice(0, 5) : '';
+        this.materia.horaFin = response.hora_fin ? response.hora_fin.slice(0, 5) : '';
       },
       (error) => {
         alert("No se pudo obtener la materia");
@@ -138,35 +141,34 @@ export class RegistroMateriasComponent implements OnInit {
   }
 
   regresar() {
-    this.router.navigate(['/home']);
+    this.location.back();
   }
 
-    /*
-  No las requiero por ahora, las dejo comentadas por si acaso.
-  public convertirHora12a24(hora12: string): string {
-    if (!hora12) return '';
-    const [time, modifier] = hora12.split(' ');
-    if (!time || !modifier) return hora12;
-    let [hours, minutes] = time.split(':').map(Number);
+  // --- FUNCIONES DE VALIDACIÓN (MÁSCARAS Y EVENTOS) ---
+  // Imitando estilo de registro-maestros.component.ts
 
-    if (modifier.toUpperCase() === 'PM' && hours < 12) {
-      hours += 12;
+  public soloLetras(event: KeyboardEvent) {
+    // Validar la tecla presionada
+    if (this.validatorService.words(event.key)) {
+      return true;
     }
-    if (modifier.toUpperCase() === 'AM' && hours === 12) {
-      hours = 0;
-    }
-    const horasStr = hours.toString().padStart(2, '0');
-    const minutosStr = minutes.toString().padStart(2, '0');
-    return `${horasStr}:${minutosStr}`;
+    return false;
   }
 
-  public convertirHora24a12(hora24: string): string {
-    if (!hora24) return '';
-    let [hours, minutes] = hora24.split(':').map(Number);
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12; // Convertir 0 a 12 para formato 12 horas
-    const horasStr = hours.toString().padStart(2, '0');
-    const minutosStr = minutes.toString().padStart(2, '0');
-    return `${horasStr}:${minutosStr} ${ampm}`;
-  }*/
+
+  public soloNumeros(event: KeyboardEvent) {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    // Solo números del 0-9
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
+
+  public soloAlfanumerico(event: KeyboardEvent) {
+    if (this.validatorService.alfanumeric(event.key)) {
+      return true;
+    }
+    return false;
+  }
 }
