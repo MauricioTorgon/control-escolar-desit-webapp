@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { AlumnosService } from 'src/app/services/alumnos.service';
 import { FacadeService } from 'src/app/services/facade.service';
+import { ValidatorService } from 'src/app/services/tools/validator.service';
 @Component({
   selector: 'app-registro-alumnos',
   templateUrl: './registro-alumnos.component.html',
@@ -30,7 +31,8 @@ export class RegistroAlumnosComponent implements OnInit {
     private location: Location,
     public activatedRoute: ActivatedRoute,
     private facadeService: FacadeService,
-    private alumnosService: AlumnosService
+    private alumnosService: AlumnosService,
+    private validatorService: ValidatorService
   ) { }
 
   ngOnInit(): void {
@@ -165,5 +167,21 @@ export class RegistroAlumnosComponent implements OnInit {
     ) {
       event.preventDefault();
     }
+  }
+
+  public soloAlfanumerico(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    if (this.validatorService.alfanumeric(event.key)&&(charCode !== 32)) {
+      return true;
+    }
+    return false;
+  }
+
+  public soloNumeros(event: KeyboardEvent) {
+    // Solo números del 0-9
+    if (this.validatorService.numeric(event.key)) {
+      return true;
+    }
+    return false;
   }
 }

@@ -109,6 +109,9 @@ export class AlumnosService {
 
     if(!this.validatorService.required(data["telefono"])){
       error["telefono"] = this.errorService.required;
+    }else if(!this.validatorService.min(data["telefono"],10)){
+      error["telefono"] = this.errorService.telefono;
+      alert("Los digitos del teléfono son menos de los esperados, deben ser 10");
     }
 
     if(!this.validatorService.required(data["ocupacion"])){

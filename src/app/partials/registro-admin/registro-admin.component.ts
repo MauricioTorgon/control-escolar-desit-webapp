@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
 import { Location } from '@angular/common';
 import { AdministradoresService } from 'src/app/services/administradores.service';
+import { ValidatorService } from 'src/app/services/tools/validator.service';
 
 @Component({
   selector: 'app-registro-admin',
@@ -31,7 +32,8 @@ export class RegistroAdminComponent implements OnInit {
     public activatedRoute: ActivatedRoute,
     private administradoresService: AdministradoresService,
     private facadeService: FacadeService,
-    private router: Router
+    private router: Router,
+    private validatorService: ValidatorService
   ) { }
 
   ngOnInit(): void {
@@ -152,5 +154,21 @@ export class RegistroAdminComponent implements OnInit {
     ) {
       event.preventDefault();
     }
+  }
+
+  public soloAlfanumerico(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    if (this.validatorService.alfanumeric(event.key)&&(charCode !== 32)) {
+      return true;
+    }
+    return false;
+  }
+
+  public soloNumeros(event: KeyboardEvent) {
+    // Solo números del 0-9
+    if (this.validatorService.numeric(event.key)) {
+      return true;
+    }
+    return false;
   }
 }

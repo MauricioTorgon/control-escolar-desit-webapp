@@ -226,3 +226,14 @@ mat-form-field {
   }
 
 }
+
+/*de registro-usuarios para la flecha*/
+/* Contenedor con el mismo ancho que .role-card y .forms-area */
+.actions-row {
+  //width: min(100%, 980px);
+  margin: 8px auto 0;
+  /* centra el contenedor como la card */
+  display: flex;
+  justify-content: flex-end;
+  /* botón a la derecha */
+}

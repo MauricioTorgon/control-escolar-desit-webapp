@@ -1,8 +1,32 @@
 <div class="wrapper">
   <div class="reg-shell">
+    <mat-card class="role-card">
+      <mat-card-header class="role-card-header">
+        <div class="actions-header-colum">
+          <ng-container *ngIf="!editarPadre; else activo">
+            <mat-card-title class="title-card">Registro de materia</mat-card-title>
+            <mat-card-subtitle class="subtitle-card">
+              Registra los datos de la nueva materia
+            </mat-card-subtitle>
+          </ng-container>
+          <ng-template #activo>
+            <mat-card-title class="title-card">Editar materia</mat-card-title>
+            <mat-card-subtitle class="subtitle-card">
+              Modifica los datos de la materia seleccionada
+            </mat-card-subtitle>
+          </ng-template>
+        </div>
+        <!-- Botón regresar compartido -->
+        <div class="actions-row">
+          <button mat-icon-button class="back-btn" (click)="goBack()">
+            <mat-icon class="back-icon">arrow_back</mat-icon>
+          </button>
+        </div>
+      </mat-card-header>
+    </mat-card>
     <div class="forms-area">
       <!-- Formularios (vistas) de cada usuario (inyección dinámica) -->
-      <app-registro-materias></app-registro-materias>
+      <app-registro-materias (editarHijo)="recibirDato($event)"></app-registro-materias>
     </div>
   </div>
 </div>

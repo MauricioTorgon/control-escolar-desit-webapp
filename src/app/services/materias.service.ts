@@ -28,8 +28,7 @@ export class MateriasService {
       Martes: false,
       Miercoles: false,
       Jueves: false,
-      Viernes: false,
-      Sabado: false
+      Viernes: false
     };
   }
   public esquemaMateria() {

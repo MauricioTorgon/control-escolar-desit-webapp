@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Location } from '@angular/common'; // Importación necesaria
 import { Router, ActivatedRoute } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
@@ -16,6 +16,7 @@ export class RegistroMateriasComponent implements OnInit {
   public editar: boolean = false;
   private idMateria: any = "";
   public lista_maestros: any[] = [];
+  @Output() editarHijo:EventEmitter<any> = new EventEmitter<any>();
 
   // Inicialización del modelo
   materia: any = {};
@@ -40,13 +41,13 @@ export class RegistroMateriasComponent implements OnInit {
   ngOnInit(): void {
     // Inicializar modelos desde el servicio para asegurar estructura
     this.materia = this.materiasService.esquemaMateria();
-    this.dias = { Lunes: false, Martes: false, Miercoles: false, Jueves: false, Viernes: false, Sabado: false };
-
+    this.dias = { Lunes: false, Martes: false, Miercoles: false, Jueves: false, Viernes: false};
     this.obtenerMaestros();
 
     const id = this.activeRoute.snapshot.params['id'];
     if (id) {
       this.editar = true;
+      this.editarHijo.emit(this.editar);
       this.idMateria = id;
       this.cargarMateria();
     }
@@ -140,26 +141,25 @@ export class RegistroMateriasComponent implements OnInit {
     );
   }
 
-  regresar() {
-    this.location.back();
-  }
-
-  // --- FUNCIONES DE VALIDACIÓN (MÁSCARAS Y EVENTOS) ---
-  // Imitando estilo de registro-maestros.component.ts
+  public goBack() {
+      this.location.back();
+    }
 
   public soloLetras(event: KeyboardEvent) {
-    // Validar la tecla presionada
-    if (this.validatorService.words(event.key)) {
-      return true;
+    const charCode = event.key.charCodeAt(0);
+    // Permitir solo letras (mayúsculas y minúsculas) y espacio
+    if (
+      !(charCode >= 65 && charCode <= 90) &&  // Letras mayúsculas
+      !(charCode >= 97 && charCode <= 122) && // Letras minúsculas
+      charCode !== 32                         // Espacio
+    ) {
+      event.preventDefault();
     }
-    return false;
   }
 
-
   public soloNumeros(event: KeyboardEvent) {
-    const charCode = (event.which) ? event.which : event.keyCode;
     // Solo números del 0-9
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    if (this.validatorService.numeric(event.key) == false) {
       return false;
     }
     return true;

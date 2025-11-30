@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
 import { Location } from '@angular/common';
 import { MaestrosService } from 'src/app/services/maestros.service';
+import { ValidatorService } from 'src/app/services/tools/validator.service';
 
 @Component({
   selector: 'app-registro-maestros',
@@ -53,7 +54,8 @@ export class RegistroMaestrosComponent implements OnInit {
     private location : Location,
     public activatedRoute: ActivatedRoute,
     private facadeService: FacadeService,
-    private maestrosService: MaestrosService
+    private maestrosService: MaestrosService,
+    private validatorService: ValidatorService
   ) { }
 
   ngOnInit(): void {
@@ -227,4 +229,19 @@ export class RegistroMaestrosComponent implements OnInit {
     }
   }
 
+  public soloAlfanumerico(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    if (this.validatorService.alfanumeric(event.key)&&(charCode !== 32)) {
+      return true;
+    }
+    return false;
+  }
+
+  public soloNumeros(event: KeyboardEvent) {
+    // Solo números del 0-9
+    if (this.validatorService.numeric(event.key)) {
+      return true;
+    }
+    return false;
+  }
 }

@@ -47,23 +47,23 @@
           <span>Alumnos</span>
         </li>
 
+        <li *ngIf="canSeeTeacherItems()" routerLink="/lista-materias" routerLinkActive="active"
+          (click)="closeSidebar()">
+          <mat-icon>library_books</mat-icon> <span>Lista de Materias</span>
+        </li>
+
         <!-- Gráficas - Available for all users -->
         <li *ngIf="canSeeStudentItems()" routerLink="/graficas" routerLinkActive="active" (click)="closeSidebar()">
           <mat-icon>bar_chart</mat-icon>
           <span>Gráficas</span>
         </li>
 
-        <!-- Eventos Académicos - Available for administrators and teachers -->
+        <!-- Eventos Académicos - Available for administrators and teachers 
         <li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active"
           class="eventos-academicos" (click)="closeSidebar()">
           <mat-icon>event</mat-icon>
           <span>Eventos Académicos</span>
-        </li>
-
-        <li *ngIf="canSeeTeacherItems()" routerLink="/lista-materias" routerLinkActive="active"
-          (click)="closeSidebar()">
-          <mat-icon>library_books</mat-icon> <span>Lista de Materias</span>
-        </li>
+        </li>-->
       </ul>
 
       <button mat-flat-button color="warn" class="logout-btn" (click)="logout()">

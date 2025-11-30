@@ -33,19 +33,20 @@
         <span class="material-icons">school</span>
         <span>Alumnos</span>
       </li>
-      <li *ngIf="canSeeStudentItems()" routerLink="/graficas" routerLinkActive="active" class="scoop-navbar-item">
-        <span class="material-icons">bar_chart</span>
-        <span>Gráficas</span>
-      </li>
       <li *ngIf="canSeeTeacherItems()" routerLink="/lista-materias" routerLinkActive="active" class="scoop-navbar-item">
         <span class="material-icons">library_books</span>
         <span>Lista de Materias</span>
       </li>
-      <li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active"
+      <li *ngIf="canSeeStudentItems()" routerLink="/graficas" routerLinkActive="active" class="scoop-navbar-item">
+        <span class="material-icons">bar_chart</span>
+        <span>Gráficas</span>
+      </li>
+      
+      <!--<li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active"
         class="scoop-navbar-item">
         <span class="material-icons">event</span>
         <span>Eventos Académicos</span>
-      </li>
+      </li>-->
 
 
     </ul>
@@ -106,23 +107,21 @@
           <span class="material-icons">school</span>
           <span>Alumnos</span>
         </li>
+        <li *ngIf="canSeeTeacherItems()" routerLink="/lista-materias" routerLinkActive="active"
+          class="scoop-navbar-item" (click)="closeSidebar()">
+          <span class="material-icons">library_books</span>
+          <span>Lista de Materias</span>
+        </li>
         <li *ngIf="canSeeStudentItems()" routerLink="/graficas" routerLinkActive="active" class="scoop-navbar-item"
           (click)="closeSidebar()">
           <span class="material-icons">bar_chart</span>
           <span>Gráficas</span>
         </li>
-
-        <li *ngIf="canSeeTeacherItems()" routerLink="/lista-materias" routerLinkActive="active"
-          class="scoop-navbar-item">
-          <span class="material-icons">library_books</span>
-          <span>Lista de Materias</span>
-        </li>
-
-        <li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active"
+        <!--<li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active"
           class="scoop-navbar-item" (click)="closeSidebar()">
           <span class="material-icons">event</span>
           <span>Eventos Académicos</span>
-        </li>
+        </li>-->
       </ul>
       <button class="scoop-logout-btn" (click)="logout(); closeSidebar()">
         <span class="material-icons">logout</span>
