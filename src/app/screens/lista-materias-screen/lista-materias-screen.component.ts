@@ -23,9 +23,9 @@ export class ListaMateriasScreenComponent implements OnInit {
 
   // Columnas base
   displayedColumns: string[] = ['nrc', 'nombre', 'seccion', 'dias', 'horario', 'editar', 'eliminar'];
-  dataSource = new MatTableDataSource<any>(this.lista_materias);
+  dataSource = new MatTableDataSource<DatosMaterias>(this.lista_materias as DatosMaterias[]);
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   ngAfterViewInit() {
@@ -45,11 +45,20 @@ export class ListaMateriasScreenComponent implements OnInit {
     this.rol = this.facadeService.getUserGroup();
     this.token = this.facadeService.getSessionToken();
 
-    // Regla de negocio: Maestro no puede ver editar ni eliminar
+    // Cambiamos las columnas que se muestran si no puede editar ni eliminar
     if (this.rol !== 'administrador') {
-      // Filtramos las columnas protegidas
-      this.displayedColumns = this.displayedColumns.filter(col => col !== 'editar' && col !== 'eliminar');
+      this.displayedColumns = ['nrc', 'nombre', 'seccion', 'dias', 'horario']
     }
+
+    //definimos el filtro con los campos deseados para materias
+        this.dataSource.filterPredicate = (data: DatosMaterias, filter: string) => {
+          const datoFiltrado = filter.trim().toLowerCase();
+          const columnasAFiltrar = [
+            data.nombre,
+            data.nrc,
+          ].join(' ').toLowerCase();
+          return columnasAFiltrar.includes(datoFiltrado);
+        };
 
     this.obtenerMaterias();
   }
@@ -79,10 +88,9 @@ export class ListaMateriasScreenComponent implements OnInit {
   }
 
   // Filtro de búsqueda
-  applyFilter(event: Event) {
+  Filtrar(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -136,4 +144,17 @@ export class ListaMateriasScreenComponent implements OnInit {
       }
     });
   }
+}
+
+export interface DatosMaterias {
+  id: number,
+  nrc: number,
+  nombre:String, 
+  seccion: number, 
+  horaInicio:String,
+  horaFin:String, 
+  salon:String, 
+  programa:String,
+  profesor:String, 
+  creditos: number
 }

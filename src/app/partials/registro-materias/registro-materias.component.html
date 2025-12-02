@@ -55,24 +55,24 @@
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Hora Inicio</mat-label>
         <input matInput [ngxTimepicker]="pickerInicio" [format]="24" placeholder="Selecciona hora"
-          [(ngModel)]="materia.horaInicio" name="horaInicio" readonly>
+          [(ngModel)]="materia.hora_inicio" name="hora_inicio" readonly>
         <ngx-material-timepicker-toggle matSuffix [for]="pickerInicio">
           <mat-icon matDatepickerToggleIcon>access_time</mat-icon>
         </ngx-material-timepicker-toggle>
         <ngx-material-timepicker #pickerInicio></ngx-material-timepicker>
       </mat-form-field>
-      <div *ngIf="errors.horaInicio" class="invalid-feedback">{{ errors.hora_inicio }}</div>
+      <div *ngIf="errors.hora_inicio" class="invalid-feedback">{{ errors.hora_inicio }}</div>
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Hora Fin</mat-label>
         <input matInput [ngxTimepicker]="pickerFin" [format]="24" placeholder="Selecciona hora"
-          [(ngModel)]="materia.horaFin" name="horaFin" readonly>
+          [(ngModel)]="materia.hora_fin" name="hora_fin" readonly>
         <ngx-material-timepicker-toggle matSuffix [for]="pickerFin">
           <mat-icon matDatepickerToggleIcon>access_time</mat-icon>
         </ngx-material-timepicker-toggle>
         <ngx-material-timepicker #pickerFin></ngx-material-timepicker>
       </mat-form-field>
-      <div *ngIf="errors.horaFin" class="invalid-feedback">{{ errors.hora_fin }}</div>
+      <div *ngIf="errors.hora_fin" class="invalid-feedback">{{ errors.hora_fin }}</div>
 
 
       <mat-form-field class="mat-input" appearance="outline">

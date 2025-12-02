@@ -51,6 +51,18 @@ export class AlumnosScreenComponent implements OnInit {
     if (this.token == "") {
       this.router.navigate(["/"]);
     }
+
+    //definimos el filtro con los campos deseados para alumno
+        this.dataSource.filterPredicate = (data: DatosAlumno, filter: string) => {
+          const nombre=data.first_name+data.last_name;
+          const datoFiltrado = filter.trim().toLowerCase();
+          const columnasAFiltrar = [
+            data.matricula,
+            nombre,
+            data.curp,
+          ].join(' ').toLowerCase();
+          return columnasAFiltrar.includes(datoFiltrado);
+        };
     //Obtener maestros
     this.obtenerAlumnos();
   }

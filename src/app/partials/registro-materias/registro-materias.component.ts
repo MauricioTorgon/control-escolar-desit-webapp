@@ -74,8 +74,8 @@ export class RegistroMateriasComponent implements OnInit {
       nombre: this.materia.nombre,
       seccion: this.materia.seccion,
       dias: diasSeleccionados,
-      hora_inicio: this.materia.horaInicio,
-      hora_fin: this.materia.horaFin,
+      hora_inicio: this.materia.hora_inicio,
+      hora_fin: this.materia.hora_fin,
       salon: this.materia.salon,
       programa: this.materia.programa,
       profesor: this.materia.profesor,
@@ -86,11 +86,6 @@ export class RegistroMateriasComponent implements OnInit {
 
   registrar() {
     this.errors = {};
-    //const diasSeleccionados = Object.keys(this.dias).filter(dia => this.dias[dia as keyof typeof this.dias]);
-
-    // Asignar el ID del profesor seleccionado directamente al modelo si es necesario
-    // (Angular Material lo hace automático con ngModel, pero verificamos)
-
     const datosParaEnvio = this.actualizarDiasSeleccionados();
 
     this.errors = this.materiasService.validarMateria(datosParaEnvio);
@@ -107,7 +102,6 @@ export class RegistroMateriasComponent implements OnInit {
 
   actualizar() {
     // Lógica similar a registrar pero con actualizarMateria
-    //const diasSeleccionados = Object.keys(this.dias).filter(dia => this.dias[dia as keyof typeof this.dias]);
 
     const datosParaEnvio = this.actualizarDiasSeleccionados();
 
@@ -127,13 +121,14 @@ export class RegistroMateriasComponent implements OnInit {
     this.materiasService.getMateriaByID(this.idMateria).subscribe(
       (response) => {
         this.materia = response;
-        // Mapear campos de snake_case (Django) a camelCase si tu servicio no lo hace
-        // Asumiendo que el servicio ya lo devuelve limpio o usas el mismo nombre:
+        //para los dias
         if (response.dias) {
-          response.dias.forEach((dia: any) => { (this.dias as any)[dia] = true; });
+          response.dias.forEach((dia: any) => { 
+            (this.dias as any)[dia] = true; 
+          });
         }
-        this.materia.horaInicio = response.hora_inicio ? response.hora_inicio.slice(0, 5) : '';
-        this.materia.horaFin = response.hora_fin ? response.hora_fin.slice(0, 5) : '';
+        this.materia.hora_inicio = response.hora_inicio ? response.hora_inicio.slice(0, 5) : '';
+        this.materia.hora_fin = response.hora_fin ? response.hora_fin.slice(0, 5) : '';
       },
       (error) => {
         alert("No se pudo obtener la materia");

@@ -2,8 +2,8 @@
   <!-- Desktop sidebar -->
   <nav class="scoop-side-navbar" *ngIf="!isMobileView">
     <ul class="scoop-navbar-list">
-        <li *ngIf="canSeeRegisterItem()" (click)="toggleRegistrarDropdown()" [class.active]="isRegistrarOpen"
-          class="scoop-navbar-item">
+        <li *ngIf="canSeeRegisterItem()" (click)="toggleRegistrarDropdown()" 
+        class="scoop-navbar-item" [ngClass]="{'active': isRegistrarOpen}">
           <mat-icon>add</mat-icon>
           <span>Registro</span>
         </li>
@@ -73,8 +73,8 @@
     <div class="mobile-sidebar-overlay" [ngClass]="{'mobile-open': mobileOpen}" (click)="closeSidebar()"></div>
     <nav class="scoop-side-navbar" [ngClass]="{'mobile-open': mobileOpen}">
       <ul class="scoop-navbar-list">
-        <li *ngIf="canSeeRegisterItem()" (click)="toggleRegistrarDropdown()" [class.active]="isRegistrarOpen"
-          class="scoop-navbar-item">
+        <li *ngIf="canSeeRegisterItem()" (click)="toggleRegistrarDropdown()" 
+          class="scoop-navbar-item" [ngClass]="{'active': isRegistrarOpen}">
           <mat-icon>add</mat-icon>
           <span>Registro</span>
         </li>

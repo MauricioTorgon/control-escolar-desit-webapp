@@ -10,8 +10,8 @@
           <span>Inicio</span>
         </li>
         <!-- Registro - Dropdown menu-->
-        <li *ngIf="canSeeRegisterItem()" (click)="toggleRegistrarDropdown()" [class.active]="isRegistrarOpen"
-          class="scoop-navbar-item">
+        <li *ngIf="canSeeRegisterItem()" (click)="toggleRegistrarDropdown()" 
+        class="scoop-navbar-item" [ngClass]="{'active': isRegistrarOpen}">
           <mat-icon>add</mat-icon>
           <span>Registro</span>
         </li>
