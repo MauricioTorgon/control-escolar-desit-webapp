@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { EliminarUserModalComponent } from 'src/app/modals/eliminar-user-modal/eliminar-user-modal.component';
 import { FacadeService } from 'src/app/services/facade.service';
 import { AlumnosService } from 'src/app/services/alumnos.service';
+import { EditarUserModalComponent } from 'src/app/modals/editar-user-modal/editar-user-modal.component';
 
 @Component({
   selector: 'app-alumnos-screen',
@@ -47,7 +48,7 @@ export class AlumnosScreenComponent implements OnInit {
     //Obtengo el token del login
     this.token = this.facadeService.getSessionToken();
     console.log("Token: ", this.token);
-    if(this.token == ""){
+    if (this.token == "") {
       this.router.navigate(["/"]);
     }
     //Obtener maestros
@@ -80,8 +81,8 @@ export class AlumnosScreenComponent implements OnInit {
               this.dataSource.paginator = this.paginator;
             }
             if (this.sort) {
-            this.dataSource.sort = this.sort;
-          }
+              this.dataSource.sort = this.sort;
+            }
           });
         }
       }, (error) => {
@@ -92,18 +93,35 @@ export class AlumnosScreenComponent implements OnInit {
   }
 
   //Función que es el para el filtering
-    Filtrar(event: Event) {
+  Filtrar(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase(); 
+    this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
-    } 
+    }
   }
   public goEditar(idUser: number) {
     const userIdSession = Number(this.facadeService.getUserId());
-    if (this.rol === 'administrador' || this.rol==='maestro' || (this.rol === 'alumno' && userIdSession === idUser)) {
-       this.router.navigate(["registro-usuarios/alumnos/" + idUser]);
-    }else{
+    if (this.rol === 'administrador' || this.rol === 'maestro' || (this.rol === 'alumno' && userIdSession === idUser)) {
+      // Se obtiene el ID del usuario en sesión, es decir, quien intenta eliminar
+      const userIdSession = Number(this.facadeService.getUserId());
+      // --------- Pero el parametro idUser (el de la función) es el ID del admin que se quiere eliminar ---------
+      //Si es administrador puede eliminar a otro administrador
+      const dialogRef = this.dialog.open(EditarUserModalComponent, {
+        data: { id: idUser, rol: 'alumno' }, //Se pasan valores a través del componente
+        height: '288px',
+        width: '328px',
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.isDelete) {
+          console.log("Se va a editar el Alumno");
+          this.router.navigate(["registro-usuarios/alumnos/" + idUser]);
+        } else {
+          console.log("No se editó el Alumno");
+        }
+      });
+    } else {
       alert("No tienes permisos para editar este alumno.");
     }
   }
@@ -115,26 +133,26 @@ export class AlumnosScreenComponent implements OnInit {
     // Administrador puede eliminar cualquier maestro
     // Maestro puede eliminar cualquier alumno
     // Alumno solo puede eliminar su propio registro
-    if (this.rol === 'administrador' || this.rol === 'maestro'|| (this.rol === 'alumno' && userIdSession === idUser)) {
+    if (this.rol === 'administrador' || this.rol === 'maestro' || (this.rol === 'alumno' && userIdSession === idUser)) {
       //Si es administrador o es maestro, es decir, cumple la condición, se puede eliminar
-      const dialogRef = this.dialog.open(EliminarUserModalComponent,{
-        data: {id: idUser, rol: 'alumno'}, //Se pasan valores a través del componente
+      const dialogRef = this.dialog.open(EliminarUserModalComponent, {
+        data: { id: idUser, rol: 'alumno' }, //Se pasan valores a través del componente
         height: '288px',
         width: '328px',
       });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if(result.isDelete){
-        console.log("Alumno eliminado");
-        alert("Alumno eliminado correctamente.");
-        //Recargar página
-        window.location.reload();
-      }else{
-        alert("Alumno no se ha podido eliminar.");
-        console.log("No se eliminó el Alumno");
-      }
-    });
-    }else{
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.isDelete) {
+          console.log("Alumno eliminado");
+          alert("Alumno eliminado correctamente.");
+          //Recargar página
+          window.location.reload();
+        } else {
+          alert("Alumno no se ha podido eliminar.");
+          console.log("No se eliminó el Alumno");
+        }
+      });
+    } else {
       alert("No tienes permisos para eliminar este Alumno.");
     }
   }

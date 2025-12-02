@@ -17,52 +17,21 @@ export class EditarUserModalComponent {
     private maestrosService: MaestrosService,
     private alumnosService: AlumnosService,
     private dialogRef: MatDialogRef<EditarUserModalComponent>,
-    @Inject (MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
     this.rol = this.data.rol;
   }
-
-  public cerrar_modal(){
-    this.dialogRef.close({isDelete:false});
+  public isMateria() {
+    return this.rol === "materia";
+  }
+  public cerrar_modal() {
+    this.dialogRef.close({ isDelete: false });
   }
 
-  public eliminarUser(){
-    if(this.rol == "administrador"){
-      // Entonces elimina un administrador
-      this.administradoresService.eliminarAdmin(this.data.id).subscribe(
-        (response)=>{
-          console.log(response);
-          this.dialogRef.close({isDelete:true});
-        }, (error)=>{
-          this.dialogRef.close({isDelete:false});
-        }
-      );
-
-    }else if(this.rol == "maestro"){
-      // Entonces elimina un maestro
-      this.maestrosService.eliminarMaestro(this.data.id).subscribe(
-        (response)=>{
-          console.log(response);
-          this.dialogRef.close({isDelete:true});
-        }, (error)=>{
-          this.dialogRef.close({isDelete:false});
-        }
-      );
-
-    }if(this.rol == "alumno"){
-      // Entonces elimina un alumno
-      this.alumnosService.eliminarAlumno(this.data.id).subscribe(
-        (response)=>{
-          console.log(response);
-          this.dialogRef.close({isDelete:true});
-        }, (error)=>{
-          this.dialogRef.close({isDelete:false});
-        }
-      );
-    }
-
+  public editarUser() {
+    this.dialogRef.close({ isDelete: true });
   }
 
 }

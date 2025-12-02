@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MateriasService } from 'src/app/services/materias.service';
 import { EliminarUserModalComponent } from 'src/app/modals/eliminar-user-modal/eliminar-user-modal.component';
+import { EditarUserModalComponent } from 'src/app/modals/editar-user-modal/editar-user-modal.component';
 
 @Component({
   selector: 'app-lista-materias-screen',
@@ -14,7 +15,7 @@ import { EliminarUserModalComponent } from 'src/app/modals/eliminar-user-modal/e
   styleUrls: ['./lista-materias-screen.component.scss']
 })
 export class ListaMateriasScreenComponent implements OnInit {
-  
+
   public name_user: string = "";
   public rol: string = "";
   public token: string = "";
@@ -26,7 +27,7 @@ export class ListaMateriasScreenComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -61,14 +62,14 @@ export class ListaMateriasScreenComponent implements OnInit {
         this.dataSource.data = this.lista_materias;
 
         // Timeout para que cargue el paginator y sort después de obtener los datos
-          setTimeout(() => {
-            if (this.paginator) {
-              this.dataSource.paginator = this.paginator;
-            }
-            if (this.sort) {
+        setTimeout(() => {
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          }
+          if (this.sort) {
             this.dataSource.sort = this.sort;
           }
-          });
+        });
       },
       (error) => {
         console.error("Error al obtener materias:", error);
@@ -89,7 +90,25 @@ export class ListaMateriasScreenComponent implements OnInit {
 
   goEditar(idMateria: number) {
     if (this.rol === 'administrador') {
-      this.router.navigate(['/registro-materias/', idMateria]);
+      // Se obtiene el ID del usuario en sesión, es decir, quien intenta eliminar
+      const userIdSession = Number(this.facadeService.getUserId());
+      // --------- Pero el parametro idUser (el de la función) es el ID del admin que se quiere eliminar ---------
+      //Si es administrador puede eliminar a otro administrador
+      const dialogRef = this.dialog.open(EditarUserModalComponent, {
+        data: { id: idMateria, rol: 'materia' }, //Se pasan valores a través del componente
+        height: '288px',
+        width: '328px',
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.isDelete) {
+          console.log("Se va a editar la Materia");
+          this.router.navigate(['/registro-materias/', idMateria]);
+        } else {
+          console.log("No se editó la Materia");
+        }
+      });
+
     } else {
       alert("No tienes permisos para editar.");
     }
@@ -107,14 +126,14 @@ export class ListaMateriasScreenComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       // Si el resultado es "isDelete: true", entonces procedemos a llamar al servicio
       if (result.isDelete) {
-          console.log("Materia eliminada");
-          alert("Materia eliminada correctamente.");
-          //Recargar página
-          window.location.reload();
-        } else {
-          alert("La materia no se ha podido eliminar.");
-          console.log("No se eliminó la Materia");
-        }
+        console.log("Materia eliminada");
+        alert("Materia eliminada correctamente.");
+        //Recargar página
+        window.location.reload();
+      } else {
+        alert("La materia no se ha podido eliminar.");
+        console.log("No se eliminó la Materia");
+      }
     });
   }
 }

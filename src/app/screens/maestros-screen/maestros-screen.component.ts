@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { EditarUserModalComponent } from 'src/app/modals/editar-user-modal/editar-user-modal.component';
 import { EliminarUserModalComponent } from 'src/app/modals/eliminar-user-modal/eliminar-user-modal.component';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MaestrosService } from 'src/app/services/maestros.service';
@@ -47,9 +48,9 @@ export class MaestrosScreenComponent implements OnInit {
     //Validar que haya inicio de sesión
     //Obtengo el token del login
     this.token = this.facadeService.getSessionToken();
-    
+
     console.log("Token: ", this.token);
-    if(this.token == ""){
+    if (this.token == "") {
       this.router.navigate(["/"]);
     }
     //Obtener maestros
@@ -82,8 +83,8 @@ export class MaestrosScreenComponent implements OnInit {
               this.dataSource.paginator = this.paginator;
             }
             if (this.sort) {
-            this.dataSource.sort = this.sort;
-          }
+              this.dataSource.sort = this.sort;
+            }
           });
         }
       }, (error) => {
@@ -94,18 +95,35 @@ export class MaestrosScreenComponent implements OnInit {
   }
 
   //Función que es el para el filtering
-    Filtrar(event: Event) {
+  Filtrar(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase(); 
+    this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
-    } 
+    }
   }
-  public goEditar(idUser: number) {    
+  public goEditar(idUser: number) {
     const userIdSession = Number(this.facadeService.getUserId());
     if (this.rol === 'administrador' || (this.rol === 'maestro' && userIdSession === idUser)) {
-       this.router.navigate(["registro-usuarios/maestros/" + idUser]);
-    }else{
+      // Se obtiene el ID del usuario en sesión, es decir, quien intenta eliminar
+      const userIdSession = Number(this.facadeService.getUserId());
+      // --------- Pero el parametro idUser (el de la función) es el ID del admin que se quiere eliminar ---------
+      //Si es administrador puede eliminar a otro administrador
+      const dialogRef = this.dialog.open(EditarUserModalComponent, {
+        data: { id: idUser, rol: 'maestro' }, //Se pasan valores a través del componente
+        height: '288px',
+        width: '328px',
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.isDelete) {
+          console.log("Se va a editar el Maestro");
+          this.router.navigate(["registro-usuarios/maestros/" + idUser]);
+        } else {
+          console.log("No se editó el Maestro");
+        }
+      });
+    } else {
       alert("No tienes permisos para editar este maestro.");
     }
   }
@@ -118,24 +136,24 @@ export class MaestrosScreenComponent implements OnInit {
     // Maestro solo puede eliminar su propio registro
     if (this.rol === 'administrador' || (this.rol === 'maestro' && userIdSession === idUser)) {
       //Si es administrador o es maestro, es decir, cumple la condición, se puede eliminar
-      const dialogRef = this.dialog.open(EliminarUserModalComponent,{
-        data: {id: idUser, rol: 'maestro'}, //Se pasan valores a través del componente
+      const dialogRef = this.dialog.open(EliminarUserModalComponent, {
+        data: { id: idUser, rol: 'maestro' }, //Se pasan valores a través del componente
         height: '288px',
         width: '328px',
       });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if(result.isDelete){
-        console.log("Maestro eliminado");
-        alert("Maestro eliminado correctamente.");
-        //Recargar página
-        window.location.reload();
-      }else{
-        alert("Maestro no se ha podido eliminar.");
-        console.log("No se eliminó el maestro");
-      }
-    });
-    }else{
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.isDelete) {
+          console.log("Maestro eliminado");
+          alert("Maestro eliminado correctamente.");
+          //Recargar página
+          window.location.reload();
+        } else {
+          alert("Maestro no se ha podido eliminar.");
+          console.log("No se eliminó el maestro");
+        }
+      });
+    } else {
       alert("No tienes permisos para eliminar este maestro.");
     }
   }
