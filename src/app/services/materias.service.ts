@@ -57,8 +57,6 @@ export class MateriasService {
 
     if (!this.validatorService.required(data["seccion"])) {
       error["seccion"] = this.errorService.required;
-    } else if (!this.validatorService.max(data["seccion"], 3)) {
-      error["seccion"] = "Máximo 3 dígitos numéricos";
     }
 
     if (data["dias"].length === 0) {

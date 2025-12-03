@@ -6,7 +6,7 @@
         <mat-label>NRC</mat-label>
         <input matInput [(ngModel)]="materia.nrc" name="nrc" mask="000000||00000" placeholder="5 o 6 dígitos"
           (keypress)="soloNumeros($event)">
-          <mat-hint align="end">{{materia.nrc?.length || 0}}/6</mat-hint>
+        <mat-hint align="end">{{materia.nrc?.length || 0}}/6</mat-hint>
       </mat-form-field>
       <div *ngIf="errors.nrc" class="invalid-feedback">{{ errors.nrc }}</div>
 
@@ -31,21 +31,10 @@
               materia</label>
           </div>
 
-          <div class="checkbox-group" style="display:flex; flex-direction: column;">
-            <mat-checkbox class="checkbox-item opc-sc" [(ngModel)]="dias.Lunes" name="Lunes" color="primary">
-              <div class="d-checkbox-nombre">Lunes</div>
-            </mat-checkbox>
-            <mat-checkbox class="checkbox-item opc-sc" [(ngModel)]="dias.Martes" name="Martes" color="primary">
-              <div class="d-checkbox-nombre">Martes</div>
-            </mat-checkbox>
-            <mat-checkbox class="checkbox-item opc-sc" [(ngModel)]="dias.Miercoles" name="Miercoles" color="primary">
-              <div class="d-checkbox-nombre">Miércoles</div>
-            </mat-checkbox>
-            <mat-checkbox class="checkbox-item opc-sc" [(ngModel)]="dias.Jueves" name="Jueves" color="primary">
-              <div class="d-checkbox-nombre">Jueves</div>
-            </mat-checkbox>
-            <mat-checkbox class="checkbox-item opc-sc" [(ngModel)]="dias.Viernes" name="Viernes" color="primary">
-              <div class="d-checkbox-nombre">Viernes</div>
+          <div class="checkbox-group" *ngFor="let dia of lista_dias">
+            <mat-checkbox class="checkbox-item opc-sc" name="opsc" (change)="checkboxChange($event)"
+              value="{{dia.value}}" [checked]="revisarSeleccion(dia.value)" color="primary">
+              <div class="d-checkbox-nombre">{{dia.viewValue}}</div>
             </mat-checkbox>
           </div>
         </div>

@@ -16,36 +16,42 @@ export class RegistroMateriasComponent implements OnInit {
   public editar: boolean = false;
   private idMateria: any = "";
   public lista_maestros: any[] = [];
-  @Output() editarHijo:EventEmitter<any> = new EventEmitter<any>();
+  @Output() editarHijo: EventEmitter<any> = new EventEmitter<any>();
 
-  // Inicialización del modelo
   materia: any = {};
   dias: any = {};
 
-  // Opciones de programa
   programas = [
     { value: 'Ingeniería en Ciencias de la Computación', viewValue: 'Ingeniería en Ciencias de la Computación' },
     { value: 'Licenciatura en Ciencias de la Computación', viewValue: 'Licenciatura en Ciencias de la Computación' },
     { value: 'Ingeniería en Tecnologías de la Información', viewValue: 'Ingeniería en Tecnologías de la Información' }
   ];
 
+  public lista_dias: any[] = [
+    {value: 'Lunes', viewValue: 'Lunes'},
+    {value: 'Martes', viewValue: 'Martes'},
+    {value: 'Miercoles', viewValue: 'Miércoles'},
+    {value: 'Jueves', viewValue: 'Jueves'},
+    {value: 'Viernes',viewValue: 'Viernes'},
+  ];
+
   constructor(
     private location: Location,
     private router: Router,
-    private activeRoute: ActivatedRoute,
+    private activated: ActivatedRoute,
     private materiasService: MateriasService,
     private maestrosService: MaestrosService,
     private validatorService: ValidatorService
   ) { }
 
   ngOnInit(): void {
-    // Inicializar modelos desde el servicio para asegurar estructura
     this.materia = this.materiasService.esquemaMateria();
-    this.dias = { Lunes: false, Martes: false, Miercoles: false, Jueves: false, Viernes: false};
+    this.materia.dias = [];
+
     this.obtenerMaestros();
 
-    const id = this.activeRoute.snapshot.params['id'];
-    if (id) {
+    if (this.activated.snapshot.params['id'] != undefined) {
+      const id = this.activated.snapshot.params['id'];
       this.editar = true;
       this.editarHijo.emit(this.editar);
       this.idMateria = id;
@@ -57,7 +63,6 @@ export class RegistroMateriasComponent implements OnInit {
     this.maestrosService.obtenerListaMaestros().subscribe(
       (response) => {
         this.lista_maestros = response;
-        // Formatear nombre para mostrarlo bonito en el select
         this.lista_maestros.forEach(maestro => {
           maestro.nombreCompleto = maestro.user.first_name + " " + maestro.user.last_name;
         });
@@ -66,32 +71,13 @@ export class RegistroMateriasComponent implements OnInit {
     );
   }
 
-  actualizarDiasSeleccionados() {
-    const diasSeleccionados = Object.keys(this.dias).filter(dia => this.dias[dia as keyof typeof this.dias]);
-    //this.materia.dias = diasSeleccionados;
-    const datosParaEnvio = {
-      nrc: this.materia.nrc,
-      nombre: this.materia.nombre,
-      seccion: this.materia.seccion,
-      dias: diasSeleccionados,
-      hora_inicio: this.materia.hora_inicio,
-      hora_fin: this.materia.hora_fin,
-      salon: this.materia.salon,
-      programa: this.materia.programa,
-      profesor: this.materia.profesor,
-      creditos: this.materia.creditos
-    };
-    return datosParaEnvio;
-  }
 
   registrar() {
     this.errors = {};
-    const datosParaEnvio = this.actualizarDiasSeleccionados();
-
-    this.errors = this.materiasService.validarMateria(datosParaEnvio);
+    this.errors = this.materiasService.validarMateria(this.materia);
     if (Object.keys(this.errors).length > 0) return;
 
-    this.materiasService.registrarMateria(datosParaEnvio).subscribe(
+    this.materiasService.registrarMateria(this.materia).subscribe(
       (response) => {
         alert("Materia registrada correctamente");
         this.router.navigate(['/home']);
@@ -101,14 +87,11 @@ export class RegistroMateriasComponent implements OnInit {
   }
 
   actualizar() {
-    // Lógica similar a registrar pero con actualizarMateria
-
-    const datosParaEnvio = this.actualizarDiasSeleccionados();
-
-    this.errors = this.materiasService.validarMateria(datosParaEnvio);
+    this.materia.id = this.idMateria;
+    this.errors = this.materiasService.validarMateria(this.materia);
     if (Object.keys(this.errors).length > 0) return;
 
-    this.materiasService.actualizarMateria(datosParaEnvio).subscribe(
+    this.materiasService.actualizarMateria(this.materia).subscribe(
       (response) => {
         alert("Materia actualizada");
         this.router.navigate(['/home']);
@@ -117,18 +100,19 @@ export class RegistroMateriasComponent implements OnInit {
     );
   }
 
-  cargarMateria() {
+ cargarMateria() {
     this.materiasService.getMateriaByID(this.idMateria).subscribe(
       (response) => {
         this.materia = response;
-        //para los dias
-        if (response.dias) {
-          response.dias.forEach((dia: any) => { 
-            (this.dias as any)[dia] = true; 
-          });
+        if (!this.materia.dias) {
+          this.materia.dias = [];
         }
-        this.materia.hora_inicio = response.hora_inicio ? response.hora_inicio.slice(0, 5) : '';
-        this.materia.hora_fin = response.hora_fin ? response.hora_fin.slice(0, 5) : '';
+        if(this.materia.hora_inicio){
+            this.materia.hora_inicio = this.materia.hora_inicio.slice(0, 5);
+        }
+        if(this.materia.hora_fin){
+            this.materia.hora_fin = this.materia.hora_fin.slice(0, 5);
+        }
       },
       (error) => {
         alert("No se pudo obtener la materia");
@@ -137,8 +121,38 @@ export class RegistroMateriasComponent implements OnInit {
   }
 
   public goBack() {
-      this.location.back();
+    this.location.back();
+  }
+
+  public checkboxChange(event: any) {
+    console.log("Evento: ", event);
+    if (event.checked) {
+      // Si se marca, agregamos el valor al array
+      this.materia.dias.push(event.source.value);
+    } else {
+      // Si se desmarca, buscamos y eliminamos del array
+      console.log(event.source.value);
+      this.materia.dias.forEach((dia: any, i: any) => {
+        if (dia == event.source.value) {
+          this.materia.dias.splice(i, 1);
+        }
+      });
     }
+    console.log("Array dias: ", this.materia.dias);
+  }
+
+  public revisarSeleccion(nombre: string) {
+    if (this.materia.dias) {
+      var busqueda = this.materia.dias.find((element: any) => element == nombre);
+      if (busqueda != undefined) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 
   public soloLetras(event: KeyboardEvent) {
     const charCode = event.key.charCodeAt(0);
