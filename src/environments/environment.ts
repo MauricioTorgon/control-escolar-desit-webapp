@@ -3,6 +3,6 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  url_api: "http://127.0.0.1:8000"
+  production: true,
+  url_api: "https://control-escolar-desit-api-ehm9.onrender.com"
 };
