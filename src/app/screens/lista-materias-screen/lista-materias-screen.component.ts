@@ -22,7 +22,7 @@ export class ListaMateriasScreenComponent implements OnInit {
   public lista_materias: any[] = [];
 
   // Columnas base
-  displayedColumns: string[] = ['nrc', 'nombre', 'seccion', 'dias', 'horario', 'editar', 'eliminar'];
+  displayedColumns: string[] = ['nrc', 'nombre', 'seccion', 'dias', 'horario', 'salon', 'programa', 'profesor', 'creditos','editar', 'eliminar'];
   dataSource = new MatTableDataSource<DatosMaterias>(this.lista_materias as DatosMaterias[]);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -47,7 +47,7 @@ export class ListaMateriasScreenComponent implements OnInit {
 
     // Cambiamos las columnas que se muestran si no puede editar ni eliminar
     if (this.rol !== 'administrador') {
-      this.displayedColumns = ['nrc', 'nombre', 'seccion', 'dias', 'horario']
+      this.displayedColumns = ['nrc', 'nombre', 'seccion', 'dias', 'horario', 'salon', 'programa', 'profesor', 'creditos'];
     }
 
     //definimos el filtro con los campos deseados para materias
